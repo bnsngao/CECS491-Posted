@@ -1,6 +1,7 @@
 package com.example.posted;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView textViewSignIn;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
+    private Button bypass;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +39,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextPasswordConfirm = findViewById(R.id.editTextRetypePassword);
         textViewSignIn =    findViewById(R.id.textViewSignIn);
+        bypass = findViewById(R.id.ButtonBypass);
+        bypass.setOnClickListener(this);
         buttonRegister.setOnClickListener(this);
+        textViewSignIn.setOnClickListener(this);
     }
 
     private void registerUser(){
@@ -86,7 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if(view==textViewSignIn){
-            //Activity Login
+            startActivity(new Intent(this, Login.class));
+        }
+
+        if(view==bypass){
+            startActivity(new Intent(this, MainMenu.class));
         }
     }
 }
