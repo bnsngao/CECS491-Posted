@@ -12,14 +12,14 @@ import android.widget.RatingBar;
 
 import java.util.List;
 
-public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
+public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.myViewHolder> {
 
     Context mContext;
-    List<ProfileItem> mData;
+    List<ProfileItem> profileData;
 
-    public Adapter(Context mContext, List<ProfileItem> mData) {
+    public ProfileAdapter(Context mContext, List<ProfileItem> profileData) {
         this.mContext = mContext;
-        this.mData = mData;
+        this.profileData = profileData;
     }
 
     @NonNull
@@ -32,14 +32,14 @@ public class Adapter extends RecyclerView.Adapter<Adapter.myViewHolder> {
 
     @Override
     public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        holder.profilePhoto.setImageResource(mData.get(position).getProfilePhoto());
-        holder.profileName.setText(mData.get(position).getProfileName());
-        holder.profileRating.setNumStars(mData.get(position).ratingNumber);
+        holder.profilePhoto.setImageResource(profileData.get(position).getProfilePhoto());
+        holder.profileName.setText(profileData.get(position).getProfileName());
+        holder.profileRating.setNumStars(profileData.get(position).ratingNumber);
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return profileData.size();
     }
 
     public class myViewHolder extends RecyclerView.ViewHolder {

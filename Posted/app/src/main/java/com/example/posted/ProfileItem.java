@@ -6,7 +6,8 @@ public class ProfileItem {
     String profileName;
 
     public ProfileItem() {
-        // default constructor
+        this.profileName = "sample_user";
+        this.ratingNumber = 2;
     }
 
     public ProfileItem(int profilePhoto, int ratingNumber, String profileName) {
