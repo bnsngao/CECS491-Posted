@@ -16,10 +16,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         List<LocationItem> mList = new ArrayList<>();
-        mList.add(new LocationItem());
-        mList.add(new LocationItem());
-        mList.add(new LocationItem());
-        mList.add(new LocationItem());
+        String temp;
+        for (int i = 0; i < 10; i++) {
+            temp = "Location #" + (i + 1);
+            mList.add(new LocationItem(R.drawable.location_test, temp, temp + " test summary"));
+        }
+
+
 
 
         //set up recycler view with profileAdapter
