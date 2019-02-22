@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         //w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         List<ProfileItem> mList = new ArrayList<>();
-        mList.add(new ProfileItem(R.drawable.senior_woman, 2, "Lady"));
+        mList.add(new ProfileItem(R.drawable.profile_test, 2, "Lady"));
         mList.add(new ProfileItem());
         mList.add(new ProfileItem());
         mList.add(new ProfileItem());
