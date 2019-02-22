@@ -77,7 +77,7 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
 
         if(view==textViewSignIn){
             finish();
-            startActivity(new Intent(this, MainActivity.class));
+            startActivity(new Intent(this, Register.class));
         }
     }
 }
