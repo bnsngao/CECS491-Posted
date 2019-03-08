@@ -28,7 +28,6 @@ public class MainMenu extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -55,14 +54,9 @@ public class MainMenu extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        ConstraintLayout mainLayout = (ConstraintLayout) findViewById(R.id.main_container);
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if (id == R.id.nav_camera) {
             // Handle the camera action
-            View layout = inflater.inflate(R.layout.connect_to_guide, null);
-            mainLayout.removeAllViews();
-            mainLayout.addView(layout);
 
         } else if (id == R.id.nav_gallery) {
 

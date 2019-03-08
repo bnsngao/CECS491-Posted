@@ -22,6 +22,9 @@
 
     <include
         android:id="@+id/main_container"
-        layout="@layout/activity_main_menu" />
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        layout="@layout/fragment_home" />
 
 </android.support.design.widget.CoordinatorLayout>
