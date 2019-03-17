@@ -23,8 +23,8 @@ public class PreferencesList extends AppCompatActivity
 
         ch1.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         String[] preferences = {"Music","Food", "Drinks", "Movies", "Theater", "Sports", "Art"}; //add more preferences as we go
-        ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,R.layout.row_layout,R.id.txt_lan,preferences);
-        ch1.setAdapter(adapter);
+        //ArrayAdapter<String> adapter=new ArrayAdapter<String>(this,R.layout.row_layout,R.id.txt_lan,preferences);
+        // ch1.setAdapter(adapter);
 
         ch1.setOnItemClickListener(new AdapterView.OnItemClickListener()
         {
