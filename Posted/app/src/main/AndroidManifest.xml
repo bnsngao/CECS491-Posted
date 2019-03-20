@@ -11,11 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+<<<<<<< HEAD
         <activity android:name=".GuidesActivity"></activity>
         <activity android:name=".FindGuideActivity" />
         <activity android:name=".ChatActivity" />
         <activity android:name=".GuideViewActivity" />
         <activity android:name=".LocationViewActivity" />
+=======
+>>>>>>> master
         <activity
             android:name=".MainMenu"
             android:theme="@style/AppTheme.NoActionBar" />
