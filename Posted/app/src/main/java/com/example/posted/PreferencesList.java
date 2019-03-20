@@ -35,8 +35,9 @@ public class PreferencesList extends AppCompatActivity
                 {
                     selectedItems.remove(selectedItem);//uncheck item
                 }
-                else
+                else {
                     selectedItems.add(selectedItem);
+                }
             }
         });
 
