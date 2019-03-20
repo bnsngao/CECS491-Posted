@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.posted.ChatActivity">
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/messages_list_users"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/myLinearLayout"
+        android:layout_below="@+id/chat_bar_layout"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintBottom_toTopOf="@+id/myLinearLayout" />
+
+    <LinearLayout
+        android:id="@+id/myLinearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentStart="true"
+        android:background="@android:color/background_light"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <EditText
+            android:id="@+id/text_input_message"
+            android:layout_width="350dp"
+            android:layout_height="wrap_content"
+            android:hint="Text Message"
+            android:padding="17dp"/>
+
+        <ImageButton
+            android:id="@+id/send_message_button"
+            android:layout_width="60dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_send_message"/>
+
+
+    </LinearLayout>
+
+</android.support.constraint.ConstraintLayout>
