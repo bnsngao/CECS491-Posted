@@ -6,7 +6,7 @@
     tools:context="com.example.posted.Home">
 
     <Button
-        android:id="@+id/button_discover_locations"
+        android:id="@+id/button4"
         android:layout_width="366dp"
         android:layout_height="58dp"
         android:layout_marginStart="8dp"
@@ -15,14 +15,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorPrimary"
-        android:text="@string/discover_locations"
+        android:text="Discover Locations"
         android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/button_discover_guides"
+        app:layout_constraintBottom_toTopOf="@+id/button3"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_chat"
+        android:id="@+id/button2"
         android:layout_width="366dp"
         android:layout_height="58dp"
         android:layout_marginStart="8dp"
@@ -31,14 +31,14 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorPrimary"
-        android:text="@string/chat"
+        android:text="Open Chats"
         android:textColor="@color/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
-        android:id="@+id/button_discover_guides"
+        android:id="@+id/button3"
         android:layout_width="366dp"
         android:layout_height="58dp"
         android:layout_marginStart="8dp"
@@ -47,9 +47,9 @@
         android:layout_marginRight="8dp"
         android:layout_marginBottom="8dp"
         android:background="@color/colorPrimary"
-        android:text="@string/discover_guides"
+        android:text="Discover Guides"
         android:textColor="@color/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/button_chat"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -65,7 +65,7 @@
         android:scaleType="fitXY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         app:srcCompat="@drawable/template" />
 
     <ImageButton
