@@ -109,7 +109,12 @@ public class MainMenu extends AppCompatActivity
             //TODO: handle redirect to chats list
             Toast.makeText(getApplicationContext(), "Chats not yet implemented", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
+
+        } else if (id == R.id.sign_out){
+            firebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, Login.class));
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

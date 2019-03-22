@@ -40,8 +40,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextPasswordConfirm = findViewById(R.id.editTextRetypePassword);
         textViewSignIn =    findViewById(R.id.textViewSignIn);
-        bypass = findViewById(R.id.ButtonBypass);
-        bypass.setOnClickListener(this);
         buttonRegister.setOnClickListener(this);
         textViewSignIn.setOnClickListener(this);
     }

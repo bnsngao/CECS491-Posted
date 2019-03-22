@@ -38,6 +38,13 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
         buttonRegister.setOnClickListener(Login.this);
         textViewSignIn.setOnClickListener(Login.this);
     }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finishAffinity();
+    }
+
     private void loginUser() {
         String email = editTextEmail.getText().toString().trim();
         String password = editTextPassword.getText().toString();
