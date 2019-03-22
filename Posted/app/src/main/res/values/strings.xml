@@ -13,5 +13,16 @@
     <string name="chat">Chat</string>
     <string name="location">Location</string>
     <string name="guide">Guide</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <string name="locations_visited">Locations Visited</string>
+    <string name="preferences">Preferences</string>
+    <string name="settings">Application Settings</string>
+
+    <!-- strings for shared preference keys -->
+    <string name="saved_pref_file_key">Preference File</string>
+    <string name="saved_name_key">User Name</string>
+    <string name="saved_email_key">User Email</string>
+
 
 </resources>
