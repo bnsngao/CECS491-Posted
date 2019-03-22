@@ -2,6 +2,7 @@ package com.example.posted;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -21,21 +22,54 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import static java.security.AccessController.getContext;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         OnFragmentInteractionListener {
-
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+    private String name;
+    private String email;
     Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Get user information (display name, email, and profile pic) from Firebase and populate the navigation bar with it
+        firebaseAuth = FirebaseAuth.getInstance();
+        if(firebaseAuth.getCurrentUser() != null){
+            user = firebaseAuth.getCurrentUser();
+            name = user.getDisplayName();
+            email = user.getEmail();
+            //TODO: set profile picture
+
+//            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+//            SharedPreferences.Editor editor = sharedPref.edit();
+//            editor.putString(getString(R.string.saved_name_key), name);
+//            editor.putString(getString(R.string.saved_email_key), email);
+//            editor.apply();
+
+            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            View headerView = navigationView.getHeaderView(0);
+            TextView navUsername = (TextView) headerView.findViewById(R.id.user_name);
+            navUsername.setText(name);
+            TextView navEmail = (TextView) headerView.findViewById(R.id.user_email);
+            navEmail.setText(email);
+
+
+        }
+
+
 
         // Setup navigation drawer and toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -75,7 +109,6 @@ public class MainMenu extends AppCompatActivity
             //TODO: handle redirect to chats list
             Toast.makeText(getApplicationContext(), "Chats not yet implemented", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_settings) {
-            changeFragment(new Settings());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
