@@ -17,6 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseUser;
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
@@ -43,6 +44,15 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         bypass.setOnClickListener(this);
         buttonRegister.setOnClickListener(this);
         textViewSignIn.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser != null){
+            startActivity(new Intent(this, MainMenu.class));
+        }
     }
 
     private void registerUser(){
@@ -92,10 +102,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         if(view==textViewSignIn){
             startActivity(new Intent(this, Login.class));
-        }
-
-        if(view==bypass){
-            startActivity(new Intent(this, MainMenu.class));
         }
     }
 }
