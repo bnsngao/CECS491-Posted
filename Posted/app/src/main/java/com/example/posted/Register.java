@@ -77,7 +77,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                     }
                     else {
                         FirebaseAuthException e = (FirebaseAuthException )task.getException();
-                       Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                     progressDialog.dismiss();
                 }
