@@ -13,5 +13,5 @@
     <string name="chat">Chat</string>
     <string name="location">Location</string>
     <string name="guide">Guide</string>
-
+    <string name="map_key" translatable='false'>AIzaSyB8J8MhWsKtQokGU-NgKqmVv4fYNdTRrlc</string>
 </resources>
