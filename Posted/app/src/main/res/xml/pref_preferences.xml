@@ -1,0 +1,173 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="@string/pref_category_food">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_american"
+            android:title="@string/pref_title_american" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_southern"
+            android:title="@string/pref_title_southern" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_chinese"
+            android:title="@string/pref_title_chinese" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_korean"
+            android:title="@string/pref_title_korean" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_japanese"
+            android:title="@string/pref_title_japanese" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_thai"
+            android:title="@string/pref_title_thai" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_vietnamese"
+            android:title="@string/pref_title_vietnamese" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_indian"
+            android:title="@string/pref_title_indian" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_hawaiian"
+            android:title="@string/pref_title_hawaiian" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_mexican"
+            android:title="@string/pref_title_mexican" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_italian"
+            android:title="@string/pref_title_italian" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_french"
+            android:title="@string/pref_title_french" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_brazilian"
+            android:title="@string/pref_title_brazilian" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_seafood"
+            android:title="@string/pref_title_seafood" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_steakhouse"
+            android:title="@string/pref_title_steakhouse" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_halal"
+            android:title="@string/pref_title_halal" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_delis"
+            android:title="@string/pref_title_delis" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_cafes"
+            android:title="@string/pref_title_cafes" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_foodtrucks"
+            android:title="@string/pref_title_foodtrucks" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_gastropubs"
+            android:title="@string/pref_title_gastropubs" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_bars"
+            android:title="@string/pref_title_bars" />
+
+    </PreferenceCategory>
+    <PreferenceCategory android:title="@string/pref_category_other">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_shopping"
+            android:title="@string/pref_title_shopping" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_nightlife"
+            android:title="@string/pref_title_nightlife" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_fitness"
+            android:title="@string/pref_title_fitness" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_beauty"
+            android:title="@string/pref_title_beauty" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_automotive"
+            android:title="@string/pref_title_automotive" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_homeservices"
+            android:title="@string/pref_title_homeservices" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_arts"
+            android:title="@string/pref_title_arts" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_health"
+            android:title="@string/pref_title_health" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_professional"
+            android:title="@string/pref_title_professional" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_pets"
+            android:title="@string/pref_title_pets" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_realestate"
+            android:title="@string/pref_title_realestate" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_hotels"
+            android:title="@string/pref_title_hotels" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_local"
+            android:title="@string/pref_title_local" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_events"
+            android:title="@string/pref_title_events" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_public"
+            android:title="@string/pref_title_public" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_financial"
+            android:title="@string/pref_title_financial" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_education"
+            android:title="@string/pref_title_education" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_religious"
+            android:title="@string/pref_title_religious" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_localflavor"
+            android:title="@string/pref_title_localflavor" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/pref_title_media"
+            android:title="@string/pref_title_media" />
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

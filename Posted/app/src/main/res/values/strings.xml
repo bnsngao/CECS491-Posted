@@ -26,52 +26,63 @@
     <string name="saved_name_key">User Name</string>
     <string name="saved_email_key">User Email</string>
 
-    <!-- Strings related to Account -->
+    <!-- Strings related to AccountSettings -->
 
     <!-- Preference settings -->
     <string name="pref_header_preferences">Preferences</string>
+    <string name="pref_summary_preferences">Change what types of places are suggested</string>
+
+    <string name="pref_category_food">Food</string>
+    <string name="pref_title_american">American</string>
+    <string name="pref_title_southern">Southern</string>
+    <string name="pref_title_chinese">Chinese</string>
+    <string name="pref_title_korean">Korean</string>
+    <string name="pref_title_japanese">Japanese</string>
+    <string name="pref_title_thai">Thai</string>
+    <string name="pref_title_vietnamese">Vietnamese</string>
+    <string name="pref_title_indian">Indian</string>
+    <string name="pref_title_hawaiian">Hawaiian</string>
+    <string name="pref_title_mexican">Mexican</string>
+    <string name="pref_title_italian">Italian</string>
+    <string name="pref_title_french">French</string>
+    <string name="pref_title_brazilian">Brazilian</string>
+    <string name="pref_title_seafood">Seafood</string>
+    <string name="pref_title_steakhouse">Steakhouse</string>
+    <string name="pref_title_halal">Halal</string>
+    <string name="pref_title_delis">Delis</string>
+    <string name="pref_title_cafes">Cafes</string>
+    <string name="pref_title_foodtrucks">Food Trucks</string>
+    <string name="pref_title_gastropubs">Gastropub</string>
+    <string name="pref_title_bars">Bars</string>
+
+    <string name="pref_category_other">Other</string>
+    <string name="pref_title_shopping">Shopping</string>
+    <string name="pref_title_nightlife">Nightlife</string>
+    <string name="pref_title_fitness">Fitness</string>
+    <string name="pref_title_beauty">Beauty and Spas</string>
+    <string name="pref_title_automotive">Automotive</string>
+    <string name="pref_title_homeservices">Home Services</string>
+    <string name="pref_title_arts">Arts and Entertainment</string>
+    <string name="pref_title_health">Health and Medical</string>
+    <string name="pref_title_professional">Professional Services</string>
+    <string name="pref_title_pets">Pets</string>
+    <string name="pref_title_realestate">Real Estate</string>
+    <string name="pref_title_hotels">Hotels and Travel</string>
+    <string name="pref_title_local">Local Services</string>
+    <string name="pref_title_events">Event Planning and Services</string>
+    <string name="pref_title_public">Public Services and Government</string>
+    <string name="pref_title_financial">Financial Services</string>
+    <string name="pref_title_education">Education</string>
+    <string name="pref_title_religious">Religious Organizations</string>
+    <string name="pref_title_localflavor">Local Flavor</string>
+    <string name="pref_title_media">Mass Media</string>
 
     <!-- Location settings -->
     <string name="pref_header_locations">Locations</string>
+    <string name="pref_summary_locations">Check which places you\'ve marked as visited</string>
 
-    <!-- Example settings for Data & Sync -->
-    <string name="pref_header_data_sync">Data &amp; sync</string>
 
-    <string name="pref_title_sync_frequency">Sync frequency</string>
-    <string-array name="pref_sync_frequency_titles">
-        <item>15 minutes</item>
-        <item>30 minutes</item>
-        <item>1 hour</item>
-        <item>3 hours</item>
-        <item>6 hours</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_sync_frequency_values">
-        <item>15</item>
-        <item>30</item>
-        <item>60</item>
-        <item>180</item>
-        <item>360</item>
-        <item>-1</item>
-    </string-array>
-
-    <string-array name="list_preference_entries">
-        <item>Entry 1</item>
-        <item>Entry 2</item>
-        <item>Entry 3</item>
-    </string-array>
-
-    <string-array name="list_preference_entry_values">
-        <item>1</item>
-        <item>2</item>
-        <item>3</item>
-    </string-array>
-
-    <string-array name="multi_select_list_preference_default_value" />
-
-    <string name="pref_title_system_sync_settings">System sync settings</string>
-
-    <!-- Example settings for Notifications -->
+    <!-- Example settings for NotificationSettings -->
     <string name="pref_header_notifications">Notifications</string>
 
     <string name="pref_title_new_message_notifications">New message notifications</string>

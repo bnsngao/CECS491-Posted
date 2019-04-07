@@ -1,9 +1,7 @@
 package com.example.posted;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
@@ -19,8 +17,6 @@ import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
 
-import java.util.List;
-
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
  * handset devices, settings are presented as a single list. On tablets,
@@ -32,7 +28,7 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">Settings
  * API Guide</a> for more information on developing a Settings UI.
  */
-public class Notifications extends AppCompatPreferenceActivity {
+public class NotificationSettings extends AppCompatPreferenceActivity {
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -172,7 +168,7 @@ public class Notifications extends AppCompatPreferenceActivity {
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
             if (id == android.R.id.home) {
-                startActivity(new Intent(getActivity(), Notifications.class));
+                startActivity(new Intent(getActivity(), NotificationSettings.class));
                 return true;
             }
             return super.onOptionsItemSelected(item);

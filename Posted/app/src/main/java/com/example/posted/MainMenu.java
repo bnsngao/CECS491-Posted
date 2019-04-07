@@ -97,10 +97,10 @@ public class MainMenu extends AppCompatActivity
             //TODO: handle redirect to chats list
             Toast.makeText(getApplicationContext(), "Chats not yet implemented", Toast.LENGTH_SHORT).show();
         } else if (id == R.id.nav_account) {
-            startActivity(new Intent(this, Account.class));
+            startActivity(new Intent(this, AccountSettings.class));
             overridePendingTransition(0, 0);
         } else if (id == R.id.nav_notification) {
-            startActivity(new Intent(this, Notifications.class));
+            startActivity(new Intent(this, NotificationSettings.class));
             overridePendingTransition(0,0);
         }
 

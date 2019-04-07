@@ -14,10 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".Notifications"
+            android:name=".NotificationSettings"
             android:label="@string/title_activity_notifications"></activity>
         <activity
-            android:name=".Account"
+            android:name=".AccountSettings"
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".MainMenu"
