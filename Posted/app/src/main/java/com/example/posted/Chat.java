@@ -3,6 +3,7 @@ package com.example.posted;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -12,6 +13,17 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -35,11 +47,22 @@ public class Chat extends Fragment implements View.OnClickListener{
 
     private ImageButton sendMessageButton;
     private EditText messageInput;
+
     private RecyclerView userMessagesList;
 
     // TODO: change from hardcoding sending messages to test account to connecting two users
     private String messageReceiverID = "HN7Ah7ShXGTu69oq3rakXBYzk4a2";
     private String messageReceiverName;
+    private String messageSenderID;
+
+    // Create variables for time info storage within the database
+    private String currDate, currTime;
+
+    // FirebaseAuth for getting userIDs
+    private FirebaseAuth mAuth;
+
+    // Create a root reference to the database for this instance
+    private DatabaseReference rootReference;
 
 
 
@@ -69,6 +92,15 @@ public class Chat extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set up mAuth
+        mAuth = FirebaseAuth.getInstance();
+
+        // Get current user ID for message sending
+        messageSenderID = mAuth.getCurrentUser().getUid();
+
+        // Create connection to database reference for this instance
+        rootReference = FirebaseDatabase.getInstance().getReference();
+
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -81,9 +113,64 @@ public class Chat extends Fragment implements View.OnClickListener{
 
         if (TextUtils.isEmpty(messageText)) {
             // Warn user to enter a message if the textbox is empty
-            Toast.makeText(this.getContext(), "Please enter a message", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "Please enter a message", Toast.LENGTH_SHORT).show();
         } else {
-            // Send message
+            // Create Database References
+            String messageSenderReference = "Messages/" + messageSenderID + "/" + messageReceiverID;
+            String messageReceiverReference = "Messages/" + messageReceiverID + "/" + messageSenderID;
+
+            // Create unique key for each message sent to the receiver
+            DatabaseReference userMessageKeyReference = rootReference.child("Messages")
+                    .child(messageSenderID).child(messageReceiverID).push();
+
+            //Toast.makeText(getContext(), "test3", Toast.LENGTH_SHORT);
+
+            // Save unique key as a reference
+            String messagePushID = userMessageKeyReference.getKey();
+
+            // Get current Date to save info into database
+            Calendar calDate = Calendar.getInstance();
+            SimpleDateFormat currentDate = new SimpleDateFormat("dd-mm-yy");
+            String saveCurrDate = currentDate.format(calDate.getTime());
+
+            // Get current Time to save info into database
+            Calendar calTime = Calendar.getInstance();
+            SimpleDateFormat currTime = new SimpleDateFormat("hh:mm aa");
+            String saveCurrTime = currTime.format(calTime.getTime());
+
+            // Create hashmaps for database references
+            Map messageBody = new HashMap();
+                messageBody.put("message", messageText);
+                messageBody.put("time", saveCurrTime);
+                messageBody.put("date", saveCurrDate);
+                messageBody.put("from", messageSenderID);
+
+            Map messageBodyDetails = new HashMap();
+                messageBodyDetails.put(messageSenderReference + "/" + messagePushID, messageBody);
+                messageBodyDetails.put(messageReceiverReference + "/" + messagePushID, messageBody);
+
+            // Save the message to the database
+
+            rootReference.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
+                @Override
+                public void onComplete(@NonNull Task task) {
+                    //Toast.makeText(getContext(), "asdf", Toast.LENGTH_SHORT);
+                    if (task.isSuccessful()) {
+                        // Message sent successfully
+                        Toast.makeText(getContext(), "Message Sent Successfully", Toast.LENGTH_SHORT);
+                    } else {
+                        // message did not send successfully
+                        // display error message
+                        String errorMessage = task.getException().getMessage();
+                        Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT);
+                    }
+
+                    // clear the user message
+                    messageInput.setText("");
+
+                }
+            });
+
         }
     }
 
