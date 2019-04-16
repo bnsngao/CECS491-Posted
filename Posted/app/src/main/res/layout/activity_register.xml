@@ -65,12 +65,7 @@
             android:layout_height="wrap_content"
             android:text="Already Registered? Login here."
             android:textAlignment="center" />
-        <Button
-            android:id="@+id/ButtonBypass"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="15dp"
-            android:text="Bypass" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

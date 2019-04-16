@@ -144,7 +144,11 @@ public class MainMenu extends AppCompatActivity
         } else if (id == R.id.nav_notification) {
             startActivity(new Intent(this, NotificationSettings.class));
             overridePendingTransition(0,0);
+        } else if (id == R.id.sign_out){
+            firebaseAuth.getInstance().signOut();
+            startActivity(new Intent(this, Login.class));
         }
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

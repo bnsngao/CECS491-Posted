@@ -21,7 +21,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
     private Button buttonRegister;
@@ -50,12 +49,19 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         editTextPassword = findViewById(R.id.editTextPassword);
         editTextPasswordConfirm = findViewById(R.id.editTextRetypePassword);
         textViewSignIn =    findViewById(R.id.textViewSignIn);
-        bypass = findViewById(R.id.ButtonBypass);
-        bypass.setOnClickListener(this);
         buttonRegister.setOnClickListener(this);
         textViewSignIn.setOnClickListener(this);
 
         mDatabase = FirebaseDatabase.getInstance().getReference();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if(currentUser != null){
+            startActivity(new Intent(this, MainMenu.class));
+        }
     }
 
     private void registerUser(){
@@ -116,10 +122,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
         if(view==textViewSignIn){
             startActivity(new Intent(this, Login.class));
-        }
-
-        if(view==bypass){
-            startActivity(new Intent(this, MainMenu.class));
         }
     }
 }
