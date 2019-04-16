@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.posted.ChatActivity">
+    tools:context="com.example.posted.Chat">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messages_list_users"
@@ -15,7 +15,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:background="@android:color/darker_gray"
+        android:background="@android:color/background_light"
         app:layout_constraintBottom_toTopOf="@+id/myLinearLayout" />
 
     <LinearLayout

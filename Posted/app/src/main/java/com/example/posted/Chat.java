@@ -4,7 +4,9 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,12 +19,17 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -49,6 +56,10 @@ public class Chat extends Fragment implements View.OnClickListener{
     private EditText messageInput;
 
     private RecyclerView userMessagesList;
+
+    private final List<Messages> messageList = new ArrayList<>();
+    private LinearLayoutManager linearLayoutManager;
+    private MessagesAdapter messagesAdapter;
 
     // TODO: change from hardcoding sending messages to test account to connecting two users
     private String messageReceiverID = "HN7Ah7ShXGTu69oq3rakXBYzk4a2";
@@ -105,6 +116,41 @@ public class Chat extends Fragment implements View.OnClickListener{
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        FetchMessages();
+    }
+
+    private void FetchMessages() {
+        rootReference.child("Messages").child(messageSenderID).child(messageReceiverID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+                if (dataSnapshot.exists()) {
+                    Messages m = dataSnapshot.getValue(Messages.class);
+                    messageList.add(m);
+                    messagesAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
     private void SendMessage() {
@@ -130,7 +176,7 @@ public class Chat extends Fragment implements View.OnClickListener{
 
             // Get current Date to save info into database
             Calendar calDate = Calendar.getInstance();
-            SimpleDateFormat currentDate = new SimpleDateFormat("dd-mm-yy");
+            SimpleDateFormat currentDate = new SimpleDateFormat("dd-MM-yyyy");
             String saveCurrDate = currentDate.format(calDate.getTime());
 
             // Get current Time to save info into database
@@ -154,19 +200,21 @@ public class Chat extends Fragment implements View.OnClickListener{
             rootReference.updateChildren(messageBodyDetails).addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task) {
-                    //Toast.makeText(getContext(), "asdf", Toast.LENGTH_SHORT);
                     if (task.isSuccessful()) {
                         // Message sent successfully
-                        Toast.makeText(getContext(), "Message Sent Successfully", Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), "Message Sent Successfully", Toast.LENGTH_SHORT).show();
+
+                        // clear the user message
+                        messageInput.setText("");
                     } else {
                         // message did not send successfully
                         // display error message
                         String errorMessage = task.getException().getMessage();
-                        Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT);
-                    }
+                        Toast.makeText(getContext(), "Error: " + errorMessage, Toast.LENGTH_SHORT).show();
 
-                    // clear the user message
-                    messageInput.setText("");
+                        // clear the user message
+                        messageInput.setText("");
+                    }
 
                 }
             });
@@ -186,6 +234,16 @@ public class Chat extends Fragment implements View.OnClickListener{
 
         // Setup EditText listener
         messageInput = view.findViewById(R.id.text_input_message);
+
+        //
+        messagesAdapter = new MessagesAdapter(messageList);
+        userMessagesList = (RecyclerView) view.findViewById(R.id.messages_list_users);
+
+        linearLayoutManager = new LinearLayoutManager(this.getContext());
+        userMessagesList.setHasFixedSize(true);
+        userMessagesList.setLayoutManager(linearLayoutManager);
+        userMessagesList.setAdapter(messagesAdapter);
+
 
         return view;
     }

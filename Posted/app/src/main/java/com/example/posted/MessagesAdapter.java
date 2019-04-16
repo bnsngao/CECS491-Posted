@@ -1,7 +1,9 @@
 package com.example.posted;
 
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.List;
 
 public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.MessageViewHolder> {
+
     // list to hold all of the messages within the context
     // of this specific chat between users
     private List<Messages> userMessageList;
@@ -64,6 +67,31 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
             }
         });
+
+        // display messages
+        messageViewHolder.receiverMessageText.setVisibility(View.INVISIBLE);
+
+        if (fromUserID.equals(messageSenderID)) {
+            // display for sender
+            messageViewHolder.senderMessageText.setBackgroundResource(R.drawable.sender_message);
+            messageViewHolder.senderMessageText.setTextColor(Color.WHITE);
+            messageViewHolder.senderMessageText.setGravity(Gravity.LEFT);
+            messageViewHolder.senderMessageText.setText(messages.getMessage());
+        } else {
+            messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
+
+            // display for receiver
+            messageViewHolder.receiverMessageText.setBackgroundResource(R.drawable.receiver_message);
+            messageViewHolder.receiverMessageText.setTextColor(Color.BLACK);
+            messageViewHolder.receiverMessageText.setGravity(Gravity.LEFT);
+            messageViewHolder.receiverMessageText.setText(messages.getMessage());
+        }
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return userMessageList.size();
     }
 
     @NonNull
@@ -75,4 +103,5 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
 
         return new MessageViewHolder(v);
     }
+
 }
