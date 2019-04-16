@@ -2,6 +2,8 @@ package com.example.posted;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -20,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
 
 public class Register extends AppCompatActivity implements View.OnClickListener {
 
@@ -77,6 +80,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
         }
         if (TextUtils.isEmpty(display_name)) {
             Toast.makeText(this, "Please enter a display name.", Toast.LENGTH_SHORT).show();
+            return;
         }
         if(TextUtils.isEmpty(password)){
             Toast.makeText(this, "Please enter password.", Toast.LENGTH_SHORT).show();
@@ -102,8 +106,23 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                         // If registration successful, add user to the database as well
                         user = firebaseAuth.getCurrentUser();
                         uid = user.getUid();
+
+                        // Initialize preferences
                         mDatabase.child("users").child(uid).child("display_name").setValue(display_name);
                         mDatabase.child("users").child(uid).child("guide_status").setValue(false);
+
+                        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+
+                        String[] categories = getResources().getStringArray(R.array.food_categories);
+                        for(int i = 0; i < categories.length; i++) {
+                            boolean selected = false;
+                            mDatabase.child("users").child(uid).child("food_prefs").child(categories[i]).setValue(selected);
+                        }
+                        categories = getResources().getStringArray(R.array.other_categories);
+                        for(int i = 0; i < categories.length; i++) {
+                            boolean selected = false;
+                            mDatabase.child("users").child(uid).child("other_prefs").child(categories[i]).setValue(selected);
+                        }
                     }
                     else {
                         FirebaseAuthException e = (FirebaseAuthException )task.getException();
