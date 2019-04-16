@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.posted">
 
+
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -12,6 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <activity
+            android:name=".NotificationSettings"
+            android:label="@string/title_activity_notifications"></activity>
+        <activity
+            android:name=".AccountSettings"
+            android:label="@string/title_activity_settings" />
         <activity
             android:name=".MainMenu"
             android:theme="@style/AppTheme.NoActionBar" />

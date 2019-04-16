@@ -1,0 +1,32 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory android:title="Account">
+        <EditTextPreference
+            android:defaultValue="asdf"
+            android:key="@string/display_name"
+            android:title="@string/display_name"/>
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="@string/guide_status"
+            android:title="@string/guide_status"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Suggestions">
+        <MultiSelectListPreference
+            android:key="@string/pref_category_food"
+            android:title="@string/pref_category_food"
+            android:entries="@array/food_categories"
+            android:entryValues="@array/food_categories_values"
+            android:defaultValue="@array/empty_array"/>
+
+        <MultiSelectListPreference
+            android:key="@string/pref_category_other"
+            android:title="@string/pref_category_other"
+            android:entries="@array/other_categories"
+            android:entryValues="@array/other_categories_values"
+            android:defaultValue="@array/empty_array"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Locations" android:summary="">
+
+    </PreferenceCategory>
+</PreferenceScreen>

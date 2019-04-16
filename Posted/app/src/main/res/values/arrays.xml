@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="empty_array">
+
+    </array>
+
+    <string-array name="food_categories">
+        <item>American</item>
+        <item>Southern</item>
+        <item>Chinese</item>
+        <item>Korean</item>
+        <item>Japanese</item>
+        <item>Thai</item>
+        <item>Vietnamese</item>
+        <item>Indian</item>
+        <item>Hawaiian</item>
+        <item>Mexican</item>
+        <item>Italian</item>
+        <item>French</item>
+        <item>Brazilian</item>
+        <item>Seafood</item>
+        <item>Steakhouse</item>
+        <item>Halal</item>
+        <item>Delis</item>
+        <item>Cafes</item>
+        <item>Food Trucks</item>
+        <item>Gastropub</item>
+        <item>Bars</item>
+    </string-array>
+
+    <string-array name="food_categories_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+        <item>21</item>
+    </string-array>
+
+    <string-array name="other_categories">
+        <item>Shopping</item>
+        <item>Nightlife</item>
+        <item>Fitness</item>
+        <item>Beauty and Spas</item>
+        <item>Automotive</item>
+        <item>Home Services</item>
+        <item>Arts and Entertainment</item>
+        <item>Health and Medical</item>
+        <item>Professional Services</item>
+        <item>Pets</item>
+        <item>Real Estate</item>
+        <item>Hotels and Travel</item>
+        <item>Local Services</item>
+        <item>Event Planning and Services</item>
+        <item>Public Services and Government</item>
+        <item>Financial Services</item>
+        <item>Education</item>
+        <item>Religious Organizations</item>
+        <item>Local Flavor</item>
+        <item>Mass Media</item>
+    </string-array>
+
+    <string-array name="other_categories_values">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+        <item>12</item>
+        <item>13</item>
+        <item>14</item>
+        <item>15</item>
+        <item>16</item>
+        <item>17</item>
+        <item>18</item>
+        <item>19</item>
+        <item>20</item>
+    </string-array>
+</resources>
