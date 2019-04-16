@@ -145,7 +145,7 @@ public class MainMenu extends AppCompatActivity
             startActivity(new Intent(this, NotificationSettings.class));
             overridePendingTransition(0,0);
         } else if (id == R.id.sign_out){
-            firebaseAuth.getInstance().signOut();
+            firebaseAuth.signOut();
             startActivity(new Intent(this, Login.class));
         }
 
