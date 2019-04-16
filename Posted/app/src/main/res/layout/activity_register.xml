@@ -28,6 +28,15 @@
             android:inputType="textEmailAddress" />
 
         <EditText
+            android:id="@+id/editTextDisplayName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="15dp"
+            android:hint="@string/display_name"
+            android:inputType="text" />
+
+
+        <EditText
             android:id="@+id/editTextPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
