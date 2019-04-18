@@ -136,8 +136,7 @@ public class MainMenu extends AppCompatActivity
         } else if (id == R.id.nav_guides) {
             changeFragment(new DiscoverGuides());
         } else if (id == R.id.nav_chats) {
-            //TODO: handle redirect to chats list
-            Toast.makeText(getApplicationContext(), "Chats not yet implemented", Toast.LENGTH_SHORT).show();
+            changeFragment(new Chat());
         } else if (id == R.id.nav_account) {
             startActivity(new Intent(this, AccountSettings.class));
             overridePendingTransition(0, 0);
@@ -163,8 +162,7 @@ public class MainMenu extends AppCompatActivity
         } else if (uri.toString().equals(getString(R.string.discover_guides))){
             changeFragment(new DiscoverGuides());
         } else if (uri.toString().equals(getString(R.string.chat))){
-            //TODO: handle redirect to chats list
-            Toast.makeText(getApplicationContext(), "Chat not yet implemented", Toast.LENGTH_SHORT).show();
+            changeFragment(new Chat());
         } else if (uri.toString().equals(getString(R.string.location))){
             changeFragment(new Location());
         } else if (uri.toString().equals(getString(R.string.guide))){

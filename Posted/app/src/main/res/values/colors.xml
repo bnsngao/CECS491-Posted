@@ -2,5 +2,7 @@
 <resources>
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
-    <color name="colorAccent">#C8C8C8</color>
+    <color name="colorAccent">#fff</color>
+    <color name="sendMessageColor">#6699ff</color>
+    <color name="receiveMessageColor">#99ffcc</color>
 </resources>
