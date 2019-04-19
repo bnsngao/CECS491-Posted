@@ -30,7 +30,7 @@
         android:background="@drawable/sender_message"
         android:padding="10dp"
         android:text="sender message"
-        android:textColor="@color/colorAccent"
+        android:textColor="@color/colorChatText"
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/receiver_message_text_body" />

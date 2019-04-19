@@ -1,5 +1,5 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <PreferenceCategory android:title="Account">
+    <PreferenceCategory android:title="Account" android:color="">
         <EditTextPreference
             android:defaultValue="asdf"
             android:key="@string/display_name"
