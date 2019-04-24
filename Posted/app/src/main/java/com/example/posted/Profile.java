@@ -7,16 +7,22 @@ class Profile {
     public boolean guide_status;
     public HashMap<String, Boolean> food_prefs;
     public HashMap<String, Boolean> other_prefs;
+    public String profile_photo;
 
     public Profile() {
     }
 
-    public Profile(String display_name, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs) {
+    public Profile(String display_name, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs, String profile_photo) {
         this.display_name = display_name;
         this.guide_status = guide_status;
         this.food_prefs = food_prefs;
         this.other_prefs = other_prefs;
+        this.profile_photo = profile_photo;
     }
+
+    public String getProfilePhoto() { return profile_photo; }
+
+    public void setProfilePhoto(String profile_photo) { this.profile_photo = profile_photo; }
 
     public String getDisplayName() {
         return display_name;

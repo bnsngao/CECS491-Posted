@@ -7,7 +7,7 @@
     android:layout_height="175dp">
 
     <ImageView
-        android:id="@+id/profile_picture"
+        android:id="@+id/user_profile_photo"
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_marginStart="8dp"
@@ -20,7 +20,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/txt_username"
+        android:id="@+id/user_display_name"
         android:layout_width="218dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
@@ -29,16 +29,7 @@
         android:text="Username"
         android:textSize="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/profile_picture"
+        app:layout_constraintStart_toEndOf="@+id/user_profile_photo"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RatingBar
-        android:id="@+id/ratingBar"
-        android:layout_width="245dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:stepSize=".5"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </android.support.constraint.ConstraintLayout>

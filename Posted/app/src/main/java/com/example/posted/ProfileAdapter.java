@@ -50,9 +50,8 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.myViewHo
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            profilePhoto = itemView.findViewById(R.id.profile_picture);
-            profileName = itemView.findViewById(R.id.txt_username);
-            profileRating = itemView.findViewById(R.id.ratingBar);
+            profilePhoto = itemView.findViewById(R.id.user_profile_photo);
+            profileName = itemView.findViewById(R.id.user_display_name);
         }
     }
 }
