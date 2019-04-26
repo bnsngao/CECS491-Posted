@@ -75,8 +75,6 @@ public class Chat extends Fragment implements View.OnClickListener{
     // Create a root reference to the database for this instance
     private DatabaseReference rootReference;
 
-
-
     public Chat() {
         // Required empty public constructor
     }

@@ -22,6 +22,9 @@
     <string name="account_settings">Account Settings</string>
     <string name="sign_out">Sign Out</string>
 
+    <!-- Strings for locations -->
+    <string name="location_name">Location Name</string>
+
     <!-- strings for shared preference keys -->
     <string name="saved_pref_file_key">Preference File</string>
     <string name="saved_name_key">Display Name</string>

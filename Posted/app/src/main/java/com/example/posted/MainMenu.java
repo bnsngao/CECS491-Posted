@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.preference.SwitchPreference;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -36,13 +37,15 @@ import java.util.Set;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnFragmentInteractionListener {
+        OnFragmentInteractionListener{
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private String display_name;
+    private boolean guide_status;
     private String uid;
     private String email;
     private DatabaseReference mDatabase;
+    SharedPreferences settings;
     Fragment fragment;
 
     @Override
@@ -53,7 +56,7 @@ public class MainMenu extends AppCompatActivity
         // Get user information (display display_name, email, and profile pic) from Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settings = PreferenceManager.getDefaultSharedPreferences(this);
 
         if(firebaseAuth.getCurrentUser() != null){
             user = firebaseAuth.getCurrentUser();
@@ -63,7 +66,47 @@ public class MainMenu extends AppCompatActivity
             //TODO: set profile picture
         }
 
+        // Populate navigation bar
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
 
+        // Setup navigation drawer and toolbar
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
+        pullInformation();
+        updateInformation();
+
+        // Initialize the main main container with the home fragment
+        changeFragment(new Home());
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+
+        //Repopulate settings and displayed information from the database
+        pullInformation();
+        updateInformation();
+    }
+
+    private void updateInformation() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.user_name);
+        display_name = settings.getString(getString(R.string.display_name), null);
+        navUsername.setText(display_name);
+        TextView navEmail = (TextView) headerView.findViewById(R.id.user_email);
+        navEmail.setText(email);
+    }
+
+    public void pullInformation() {
         // Update shared preferences from the preferences on the database (in case the user logged in on another device and changed it there)
         DatabaseReference ref = mDatabase.child("users").child(uid);
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -78,7 +121,28 @@ public class MainMenu extends AppCompatActivity
                     editor.putString(getString(R.string.display_name), user.getDisplayName());
                     editor.putBoolean(getString(R.string.guide_status), user.isGuide());
 
-                    editor.apply();
+                    Set<String> foodEntries = new HashSet<String>();
+                    String[] foodCategories = getResources().getStringArray(R.array.food_categories);
+                    for(int i = 0; i < foodCategories.length; i++){
+                        if(user.food_prefs.get(foodCategories[i])){
+                            foodEntries.add(Integer.toString(i+1));
+                        }else{
+                            foodEntries.remove(Integer.toString(i+1));
+                        }
+                    }
+                    editor.putStringSet(getString(R.string.pref_category_food), foodEntries);
+
+                    Set<String> otherEntries = new HashSet<String>();
+                    String[] otherCategories = getResources().getStringArray(R.array.other_categories);
+                    for(int i = 0; i < otherCategories.length; i++){
+                        if(user.other_prefs.get(otherCategories[i])){
+                            otherEntries.add(Integer.toString(i+1));
+                        }else{
+                            otherEntries.remove(Integer.toString(i+1));
+                        }
+                    }
+                    editor.putStringSet(getString(R.string.pref_category_other), otherEntries);
+                    editor.commit();
                 }
             }
             @Override
@@ -86,67 +150,6 @@ public class MainMenu extends AppCompatActivity
 
             }
         });
-
-        // Populate navigation bar
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        View headerView = navigationView.getHeaderView(0);
-        TextView navUsername = (TextView) headerView.findViewById(R.id.user_name);
-        display_name = settings.getString(getString(R.string.display_name), null);
-        navUsername.setText(display_name);
-        TextView navEmail = (TextView) headerView.findViewById(R.id.user_email);
-        navEmail.setText(email);
-
-        //Initialize shared preference listeners to update the database anytime a preference is changed
-        SharedPreferences.OnSharedPreferenceChangeListener listener;
-        listener = new SharedPreferences.OnSharedPreferenceChangeListener() {
-            public void onSharedPreferenceChanged(SharedPreferences settings, String key){
-                NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-                View headerView = navigationView.getHeaderView(0);
-
-                if(key == getString(R.string.display_name)){
-                    display_name = settings.getString(getString(R.string.display_name), null);
-                    TextView navUsername = (TextView) headerView.findViewById(R.id.user_name);
-                    navUsername.setText(display_name);
-                    mDatabase.child("users").child(uid).child("display_name").setValue(display_name);
-                    Toast.makeText(getApplicationContext(), "Display name changed", Toast.LENGTH_SHORT).show();
-                } else if(key == getString(R.string.pref_category_food)){
-                    Set<String> entries = settings.getStringSet(getString(R.string.pref_category_food), new HashSet<String>());
-                    String[] categories = getResources().getStringArray(R.array.food_categories);
-                    for(int i = 0; i < categories.length; i++) {
-                        boolean selected = false;
-                        if(entries.contains(Integer.toString(i+1))){
-                            selected = true;
-                        }
-                        mDatabase.child("users").child(uid).child("food_prefs").child(categories[i]).setValue(selected);
-                    }
-                } else if(key == getString(R.string.pref_category_other)){
-                    Set<String> entries = settings.getStringSet(getString(R.string.pref_category_other), new HashSet<String>());
-                    String[] categories = getResources().getStringArray(R.array.other_categories);
-                    for(int i = 0; i < categories.length; i++) {
-                        boolean selected = false;
-                        if(entries.contains(Integer.toString(i+1))){
-                            selected = true;
-                        }
-                        mDatabase.child("users").child(uid).child("other_prefs").child(categories[i]).setValue(selected);
-                    }
-                }
-            }
-        };
-        settings.registerOnSharedPreferenceChangeListener(listener);
-
-        // Setup navigation drawer and toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        // Initialize the main main container with the home fragment
-        changeFragment(new Home());
     }
 
     @Override

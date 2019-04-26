@@ -18,6 +18,7 @@ import android.view.ViewGroup;
  */
 public class Location extends Fragment implements View.OnClickListener{
     private OnFragmentInteractionListener mListener;
+    private String locationID;
 
     public Location() {
         // Required empty public constructor
@@ -29,7 +30,7 @@ public class Location extends Fragment implements View.OnClickListener{
      *
      * @return A new instance of fragment Location.
      */
-    public static Location newInstance() {
+    public static Location newInstance(String locationID) {
         Location fragment = new Location();
         Bundle args = new Bundle();
         fragment.setArguments(args);

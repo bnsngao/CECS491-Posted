@@ -3,6 +3,7 @@ package com.example.posted;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
@@ -12,14 +13,25 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.RingtonePreference;
 import android.text.TextUtils;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -32,7 +44,13 @@ import java.util.List;
  * href="http://developer.android.com/guide/topics/ui/settings.html">AccountSettings
  * API Guide</a> for more information on developing a AccountSettings UI.
  */
-public class AccountSettings extends AppCompatPreferenceActivity {
+public class AccountSettings extends AppCompatPreferenceActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener{
+    private FirebaseAuth firebaseAuth;
+    private DatabaseReference mDatabase;
+    private FirebaseUser user;
+
+    private String uid;
 
     /**
      * A preference value change listener that updates the preference's summary
@@ -94,10 +112,61 @@ public class AccountSettings extends AppCompatPreferenceActivity {
     }
 
     @Override
+    public void onSharedPreferenceChanged(SharedPreferences settings, String key){
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        if(key == getString(R.string.display_name)){
+            String display_name = settings.getString(getString(R.string.display_name), null);
+            mDatabase.child("users").child(uid).child("display_name").setValue(display_name);
+            Toast.makeText(getApplicationContext(), "Display name changed", Toast.LENGTH_SHORT).show();
+        } else if(key == getString(R.string.guide_status)){
+            Toast.makeText(getApplicationContext(), "Guide status changed", Toast.LENGTH_SHORT).show();
+            Boolean guide_status = settings.getBoolean(getString(R.string.guide_status), false);
+            mDatabase.child("users").child(uid).child("guide_status").setValue(guide_status);
+            //Toast.makeText(getApplicationContext(), "Guide status changed", Toast.LENGTH_SHORT).show();
+        } else if(key == getString(R.string.pref_category_food)){
+            Set<String> entries = settings.getStringSet(getString(R.string.pref_category_food), new HashSet<String>());
+            String[] categories = getResources().getStringArray(R.array.food_categories);
+            for(int i = 0; i < categories.length; i++) {
+                boolean selected = false;
+                if(entries.contains(Integer.toString(i+1))){
+                    selected = true;
+                }
+                mDatabase.child("users").child(uid).child("food_prefs").child(categories[i]).setValue(selected);
+            }
+            Toast.makeText(getApplicationContext(), "Food prefs changed", Toast.LENGTH_SHORT).show();
+        } else if(key == getString(R.string.pref_category_other)){
+            Set<String> entries = settings.getStringSet(getString(R.string.pref_category_other), new HashSet<String>());
+            String[] categories = getResources().getStringArray(R.array.other_categories);
+            for(int i = 0; i < categories.length; i++) {
+                boolean selected = false;
+                if(entries.contains(Integer.toString(i+1))){
+                    selected = true;
+                }
+                mDatabase.child("users").child(uid).child("other_prefs").child(categories[i]).setValue(selected);
+            }
+            Toast.makeText(getApplicationContext(), "Other prefs changed", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
 
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        // Get user information (display display_name, email, and profile pic) from Firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+
+        if(firebaseAuth.getCurrentUser() != null){
+            user = firebaseAuth.getCurrentUser();
+            uid = user.getUid();
+        }
+
+        //Initialize shared preference listeners to update the database anytime a preference is changed
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(this);
+        settings.registerOnSharedPreferenceChangeListener(this);
 
         // Display the fragment as the main content.
         getFragmentManager().beginTransaction().replace(android.R.id.content,
