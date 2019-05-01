@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -102,9 +103,10 @@ public class ChatList extends Fragment implements View.OnClickListener {
         // Get current userID
         currentUID = mAuth.getCurrentUser().getUid();
 
+
         // Initialize database references for current user
         chatListReference = FirebaseDatabase.getInstance().getReference().child("Messages").child(currentUID);
-        usersReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
         // Create RecyclerView and set layout manager
         chatList = (RecyclerView) chatView.findViewById(R.id.chat_list);
@@ -177,7 +179,7 @@ public class ChatList extends Fragment implements View.OnClickListener {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                                holder.displayName.setText(databaseError.toString());
                             }
                         });
                     }
