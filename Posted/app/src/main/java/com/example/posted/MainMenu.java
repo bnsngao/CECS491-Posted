@@ -20,6 +20,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.posted.dummy.DummyContent;
 import com.firebase.ui.auth.data.model.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -37,7 +38,7 @@ import java.util.Set;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnFragmentInteractionListener{
+        OnFragmentInteractionListener, GuideFragment.OnListFragmentInteractionListener ,GuidePage.OnFragmentInteractionListener{
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private String display_name;
@@ -170,7 +171,7 @@ public class MainMenu extends AppCompatActivity
         if (id == R.id.nav_locations) {
             changeFragment(new DiscoverLocations());
         } else if (id == R.id.nav_guides) {
-            changeFragment(new DiscoverGuides());
+            changeFragment(new GuideFragment());
         } else if (id == R.id.nav_chats) {
             changeFragment(new Chat());
         } else if (id == R.id.nav_account) {
@@ -196,13 +197,11 @@ public class MainMenu extends AppCompatActivity
         if(uri.toString().equals(getString(R.string.discover_locations))){
             changeFragment(new DiscoverLocations());
         } else if (uri.toString().equals(getString(R.string.discover_guides))){
-            changeFragment(new DiscoverGuides());
+            changeFragment(new GuideFragment());
         } else if (uri.toString().equals(getString(R.string.chat))){
             changeFragment(new Chat());
         } else if (uri.toString().equals(getString(R.string.location))){
             changeFragment(new Location());
-        } else if (uri.toString().equals(getString(R.string.guide))){
-            changeFragment(new Guide());
         }
     }
 
@@ -213,5 +212,11 @@ public class MainMenu extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.main_container, fragment);
         ft.commit();
+    }
+
+    @Override
+    public void onListFragmentInteraction(Profile item) {
+        changeFragment(GuidePage.newInstance(item.display_name));
+        Toast.makeText(this, item.display_name, Toast.LENGTH_SHORT).show();
     }
 }
