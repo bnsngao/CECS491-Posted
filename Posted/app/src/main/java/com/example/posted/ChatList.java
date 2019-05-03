@@ -179,6 +179,7 @@ public class ChatList extends Fragment implements View.OnClickListener {
 
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
+                                // display error
                                 holder.displayName.setText(databaseError.toString());
                             }
                         });
