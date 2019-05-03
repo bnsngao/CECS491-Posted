@@ -3,7 +3,8 @@
     package="com.example.posted">
 
 
-
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -14,6 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="@string/map_key" />
         <activity
             android:name=".NotificationSettings"
             android:label="@string/title_activity_notifications"></activity>
@@ -24,7 +27,7 @@
             android:name=".MainMenu"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Login" />
-        <activity android:name=".Register">
+        <activity android:name=".GoogleMaps">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
