@@ -200,7 +200,7 @@ public class MainMenu extends AppCompatActivity
         } else if (uri.toString().equals(getString(R.string.chat))){
             changeFragment(new Chat());
         } else if (uri.toString().equals(getString(R.string.location))){
-            changeFragment(new Location());
+            changeFragment(Location.newInstance("Z4Jn4F41a-S1V7LCwyJM8Q"));
         } else if (uri.toString().equals(getString(R.string.guide))){
             changeFragment(new Guide());
         }
