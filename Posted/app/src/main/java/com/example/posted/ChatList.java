@@ -5,6 +5,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -172,9 +173,18 @@ public class ChatList extends Fragment implements View.OnClickListener {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 // TODO add datasnapshot for profile image
 
-                                final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
+                                if (dataSnapshot.exists()) {
+                                    final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
 
-                                holder.displayName.setText(retrievedDisplayName);
+                                    holder.displayName.setText(retrievedDisplayName);
+
+                                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            changeFragment(new Chat().newInstance(userIDs));
+                                        }
+                                    });
+                                }
                             }
 
                             @Override
@@ -209,5 +219,14 @@ public class ChatList extends Fragment implements View.OnClickListener {
             profilePhoto = itemView.findViewById(R.id.user_profile_photo);
             displayName = itemView.findViewById(R.id.user_display_name);
         }
+    }
+
+
+    // Changes the fragment being displayed in the main page
+    // Call with changeFragment(new FragmentConstructor());
+    public void changeFragment(Fragment fragment){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.main_container, fragment);
+        ft.commit();
     }
 }
