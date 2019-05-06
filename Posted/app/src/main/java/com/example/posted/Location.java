@@ -171,16 +171,6 @@ public class Location extends Fragment implements View.OnClickListener{
                     TextView categoriesView = (TextView) view.findViewById(R.id.categories);
                     categoriesView.setText(categories);
 
-                    // Is closed
-                    boolean isClosed = business.getIsClosed();
-                    TextView closedView = (TextView) view.findViewById(R.id.closed);
-                    if(isClosed){
-                        closedView.setText("Closed");
-                        closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorClosed));
-                    }else{
-                        closedView.setText("Open");
-                        closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorOpen));
-                    }
 
                     // Hours
                     Calendar calendar = Calendar.getInstance();
@@ -191,16 +181,38 @@ public class Location extends Fragment implements View.OnClickListener{
                     for(int i=0; i < openList.size(); i ++){
                         if((day - 2) == openList.get(i).getDay()){
                             try {
-                                final SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
-                                final Date dateObjStart = sdf.parse(openList.get(i).getStart());
-                                final Date dateObjEnd = sdf.parse(openList.get(i).getEnd());
-                                String startHour = new SimpleDateFormat("K:mm a").format(dateObjStart);
-                                String endHour = new SimpleDateFormat("K:mm a").format(dateObjEnd);
+                                SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+                                Date dateObjStart = sdf.parse(openList.get(i).getStart());
+                                Date dateObjEnd = sdf.parse(openList.get(i).getEnd());
+                                String startHour = new SimpleDateFormat("hh:mm a").format(dateObjStart);
+                                String endHour = new SimpleDateFormat("hh:mm a").format(dateObjEnd);
                                 if(todaysHours.equals("")){
                                     todaysHours = startHour + " - " + endHour;
                                 } else{
                                     todaysHours = todaysHours + ", " + startHour + " - " + endHour;
                                 }
+
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(Calendar.MONTH, 0);
+                                cal.set(Calendar.YEAR, 1970);
+                                cal.set(Calendar.DAY_OF_YEAR, 1);
+                                Date currDate = cal.getTime();
+                                System.out.println(endHour);
+                                if(openList.get(i).getIsOvernight() || endHour.equals("12:00 AM")){
+                                    Calendar calTemp = Calendar.getInstance();
+                                    calTemp.setTime(dateObjEnd);
+                                    calTemp.set(Calendar.DAY_OF_YEAR, 2);
+                                    dateObjEnd = calTemp.getTime();
+                                }
+                                TextView closedView = (TextView) view.findViewById(R.id.closed);
+                                if((dateObjStart.before(currDate)) && (currDate.before(dateObjEnd))) {
+                                    closedView.setText("Open");
+                                    closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorOpen));
+                                }else{
+                                    closedView.setText("Closed");
+                                    closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorClosed));
+                                }
+
                             } catch (final ParseException e) {
                                 e.printStackTrace();
                             }
