@@ -1,11 +1,15 @@
 package com.example.posted;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -17,10 +21,14 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.posted.dummy.DummyContent;
 import com.firebase.ui.auth.data.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,7 +37,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.squareup.picasso.Picasso;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -37,13 +51,16 @@ import java.util.Set;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnFragmentInteractionListener{
+        OnFragmentInteractionListener, GuideFragment.OnListFragmentInteractionListener ,GuidePage.OnFragmentInteractionListener,View.OnClickListener {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private String display_name;
     private boolean guide_status;
     private String uid;
     private String email;
+    private ImageView profilePicture;
+    private StorageReference storageRef;
+    private FirebaseStorage storage;
     private DatabaseReference mDatabase;
     SharedPreferences settings;
     Fragment fragment;
@@ -57,6 +74,8 @@ public class MainMenu extends AppCompatActivity
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
         settings = PreferenceManager.getDefaultSharedPreferences(this);
+        storage = FirebaseStorage.getInstance();
+        storageRef = storage.getReference();
 
         if(firebaseAuth.getCurrentUser() != null){
             user = firebaseAuth.getCurrentUser();
@@ -82,7 +101,6 @@ public class MainMenu extends AppCompatActivity
 
         pullInformation();
         updateInformation();
-
         // Initialize the main main container with the home fragment
         changeFragment(new Home());
     }
@@ -104,6 +122,20 @@ public class MainMenu extends AppCompatActivity
         navUsername.setText(display_name);
         TextView navEmail = (TextView) headerView.findViewById(R.id.user_email);
         navEmail.setText(email);
+        profilePicture = headerView.findViewById(R.id.imageView);
+        storageRef.child("profileImages/" + user.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Picasso.get().load(uri).into(profilePicture);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+        profilePicture.setOnClickListener(this);
     }
 
     public void pullInformation() {
@@ -158,7 +190,8 @@ public class MainMenu extends AppCompatActivity
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+//            super.onBackPressed();
+            changeFragment(new Home());
         }
     }
 
@@ -170,7 +203,7 @@ public class MainMenu extends AppCompatActivity
         if (id == R.id.nav_locations) {
             changeFragment(new DiscoverLocations());
         } else if (id == R.id.nav_guides) {
-            changeFragment(new DiscoverGuides());
+            changeFragment(new GuideFragment());
         } else if (id == R.id.nav_chats) {
             changeFragment(new Chat());
         } else if (id == R.id.nav_account) {
@@ -196,13 +229,11 @@ public class MainMenu extends AppCompatActivity
         if(uri.toString().equals(getString(R.string.discover_locations))){
             changeFragment(new DiscoverLocations());
         } else if (uri.toString().equals(getString(R.string.discover_guides))){
-            changeFragment(new DiscoverGuides());
+            changeFragment(new GuideFragment());
         } else if (uri.toString().equals(getString(R.string.chat))){
             changeFragment(new Chat());
         } else if (uri.toString().equals(getString(R.string.location))){
             changeFragment(Location.newInstance("m-and-m-donuts-anaheim"));
-        } else if (uri.toString().equals(getString(R.string.guide))){
-            changeFragment(new Guide());
         }
     }
 
@@ -213,5 +244,54 @@ public class MainMenu extends AppCompatActivity
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.main_container, fragment);
         ft.commit();
+    }
+
+    @Override
+    public void onListFragmentInteraction(Profile item) {
+        changeFragment(GuidePage.newInstance(item.display_name));
+    }
+
+    @Override
+    public void onClick(View v) {
+        if(v == profilePicture){
+            pickImage();
+        }
+    }
+    public static final int PICK_IMAGE = 1;
+
+    public void pickImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                //Display an error
+                return;
+            }
+            try {
+                InputStream stream = this.getContentResolver().openInputStream(data.getData());
+                StorageReference imageStorage = storageRef.child("profileImages/" + user.getUid());
+                UploadTask uploadTask = imageStorage.putStream(stream);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle unsuccessful uploads
+                    }
+                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        // ...
+                    }
+                });
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

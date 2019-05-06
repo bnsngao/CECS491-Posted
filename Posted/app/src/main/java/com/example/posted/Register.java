@@ -34,7 +34,6 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private TextView textViewSignIn;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
-    private Button bypass;
     private DatabaseReference mDatabase;
     private FirebaseUser user;
     private String uid;
@@ -101,7 +100,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 @Override
                 public void onComplete(@NonNull Task<AuthResult> task) {
                     if(task.isSuccessful()) {
-                        Toast.makeText(Register.this, "Registration Success", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(Register.this, "Registration Success", Toast.LENGTH_SHORT).show();
 
                         // If registration successful, add user to the database as well
                         user = firebaseAuth.getCurrentUser();
