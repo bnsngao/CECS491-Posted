@@ -10,8 +10,10 @@
             android:id="@+id/guideProfileImage"
             android:layout_width="100dp"
             android:layout_height="100dp"
+            android:layout_marginLeft="25dp"
             android:layout_marginRight="25dp"
-            android:scaleType="fitXY"/>
+            android:scaleType="fitXY"
+            android:src="@drawable/profile_test"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -35,4 +37,12 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"/>
+    <Button
+        android:id="@+id/chat_button"
+        android:layout_marginLeft="25dp"
+        android:layout_marginRight="25dp"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Send Message"/>
 </LinearLayout>

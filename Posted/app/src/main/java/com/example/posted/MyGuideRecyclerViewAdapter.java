@@ -15,7 +15,6 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
 
     private final List<Profile> mValues;
     private final OnListFragmentInteractionListener mListener;
-    private RatingBar guideRating;
 
     public MyGuideRecyclerViewAdapter(List<Profile> items, OnListFragmentInteractionListener listener) {
         mValues = items;

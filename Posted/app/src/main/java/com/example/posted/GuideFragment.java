@@ -2,6 +2,7 @@ package com.example.posted;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -20,8 +21,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -86,16 +89,28 @@ public class GuideFragment extends Fragment {
             }
             recyclerView.setAdapter(mAdapter);
         }
-        DatabaseReference myRef = mDatabase.child("users").child(userID);
-        myRef.addValueEventListener(new ValueEventListener() {
+        DummyContent.ITEMS.clear();
+        DatabaseReference myRef = mDatabase.child("users");
+        myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Profile profile = dataSnapshot.getValue(Profile.class);
-                if (profile.isGuide()) {
-                    DummyContent.ITEMS.add(profile);
-                    Toast.makeText(getContext(), profile.display_name, Toast.LENGTH_SHORT).show();
-                    mAdapter.notifyDataSetChanged();
+                Iterable<DataSnapshot> userIDS = dataSnapshot.getChildren();
+//                ArrayList<Profile> profiles = new ArrayList<>();
+                for(DataSnapshot user:userIDS){
+                    Profile p = user.getValue(Profile.class);
+                    {
+                        if (p.isGuide()){
+                            DummyContent.ITEMS.add(p);
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    }
                 }
+//                Profile profile = dataSnapshot.getValue(Profile.class);
+//                if (profile.isGuide()) {
+//                    DummyContent.ITEMS.add(profile);
+//                    Toast.makeText(getContext(), profile.display_name, Toast.LENGTH_SHORT).show();
+//                    mAdapter.notifyDataSetChanged();
+//                }
             }
 
             @Override
