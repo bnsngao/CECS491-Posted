@@ -7,7 +7,7 @@
     android:layout_height="175dp">
 
     <ImageView
-        android:id="@+id/profile_picture"
+        android:id="@+id/user_profile_photo"
         android:layout_width="125dp"
         android:layout_height="125dp"
         android:layout_marginStart="8dp"
@@ -20,7 +20,7 @@
         tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
-        android:id="@+id/txt_username"
+        android:id="@+id/user_display_name"
         android:layout_width="218dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
@@ -33,7 +33,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <RatingBar
-        android:id="@+id/ratingBar"
+        android:id="@+id/guide_rating"
         android:layout_width="245dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"

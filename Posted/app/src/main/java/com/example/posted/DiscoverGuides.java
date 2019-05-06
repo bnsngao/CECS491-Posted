@@ -47,18 +47,6 @@ public class DiscoverGuides extends Fragment implements View.OnClickListener{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-//        List<ProfileItem> mList = new ArrayList<>();
-//        mList.add(new ProfileItem(R.drawable.profile_test, 2, "Lady"));
-//        mList.add(new ProfileItem());
-//        mList.add(new ProfileItem());
-//        mList.add(new ProfileItem());
-
-
-        //set up recycler view with profileAdapter
-//        RecyclerView recyclerView = getView().findViewById(R.id.rv_profile_list);
-//        ProfileAdapter profileAdapter = new ProfileAdapter(getActivity(), mList);
-//        recyclerView.setAdapter(profileAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     @Override

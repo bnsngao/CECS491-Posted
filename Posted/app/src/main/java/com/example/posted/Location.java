@@ -9,8 +9,11 @@ import android.location.LocationManager;
 import android.media.Rating;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,9 +21,16 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.yelp.fusion.client.connection.YelpFusionApi;
 import com.yelp.fusion.client.connection.YelpFusionApiFactory;
@@ -59,15 +69,19 @@ import retrofit2.Response;
  * create an instance of this fragment.
  */
 public class Location extends Fragment implements View.OnClickListener{
-    private static final int PERMISSION_ACCESS_COARSE_LOCATION = 0;
+    private static String ARG_PARAM1 = "param1";
     private OnFragmentInteractionListener mListener;
-    private String locationID = "ashoka-the-great-artesia";
+    private String locationID;
     private FusedLocationProviderClient fusedLocationClient;
     private Location userLocation;
     private String apiKey = "R6yVr4Q3RYIwMLnELCLqgoCaQeGsoYXoGgxYZo2jEIurtkAs2uaookblm0J3fzz-7GGKPwDTiZ_N5xoxygiPUIwymxXvppyySCe-f9HUWZVrOR_dwj7wMN5W0-jDXHYx";
     private Business business;
     private Call<Business> call;
     private View view;
+    private DatabaseReference guideListReference, // reference for guides
+            usersReference; // info for guides
+    private RecyclerView guideList;
+
 
     public Location() {
         // Required empty public constructor
@@ -79,9 +93,10 @@ public class Location extends Fragment implements View.OnClickListener{
      *
      * @return A new instance of fragment Location.
      */
-    public static Location newInstance(String locationID) {
+    public static Location newInstance(String locID) {
         Location fragment = new Location();
         Bundle args = new Bundle();
+        args.putString(ARG_PARAM1, locID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -89,6 +104,9 @@ public class Location extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            locationID = getArguments().getString(ARG_PARAM1);
+        }
     }
 
     @Override
@@ -97,7 +115,10 @@ public class Location extends Fragment implements View.OnClickListener{
         // Inflate the layout for this fragment
         view =inflater.inflate(R.layout.fragment_location, container, false);
 
-        // Get user's last known location
+        guideListReference = FirebaseDatabase.getInstance().getReference().child("Locations").child(locationID).child("Guides");
+        usersReference = FirebaseDatabase.getInstance().getReference().child("users");
+        guideList = (RecyclerView) view.findViewById(R.id.guide_list);
+        guideList.setLayoutManager(new LinearLayoutManager(getContext()));
 
 
         // Update UI text with the Business object.
@@ -109,7 +130,8 @@ public class Location extends Fragment implements View.OnClickListener{
                 @Override
                 public void onResponse(Call<Business> call, Response<Business> response) {
                     business = response.body();
-                    System.out.println(business);
+                    String businessId = business.getId();
+
                     // Business name
                     String businessName = business.getName();  // "Ashoka The Great"
                     TextView businessNameView = (TextView) view.findViewById(R.id.location_name);
@@ -149,16 +171,6 @@ public class Location extends Fragment implements View.OnClickListener{
                     TextView categoriesView = (TextView) view.findViewById(R.id.categories);
                     categoriesView.setText(categories);
 
-                    // Is closed
-                    boolean isClosed = business.getIsClosed();
-                    TextView closedView = (TextView) view.findViewById(R.id.closed);
-                    if(isClosed){
-                        closedView.setText("Closed");
-                        closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorClosed));
-                    }else{
-                        closedView.setText("Open");
-                        closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorOpen));
-                    }
 
                     // Hours
                     Calendar calendar = Calendar.getInstance();
@@ -169,16 +181,38 @@ public class Location extends Fragment implements View.OnClickListener{
                     for(int i=0; i < openList.size(); i ++){
                         if((day - 2) == openList.get(i).getDay()){
                             try {
-                                final SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
-                                final Date dateObjStart = sdf.parse(openList.get(i).getStart());
-                                final Date dateObjEnd = sdf.parse(openList.get(i).getEnd());
-                                String startHour = new SimpleDateFormat("K:mm a").format(dateObjStart);
-                                String endHour = new SimpleDateFormat("K:mm a").format(dateObjEnd);
+                                SimpleDateFormat sdf = new SimpleDateFormat("HHmm");
+                                Date dateObjStart = sdf.parse(openList.get(i).getStart());
+                                Date dateObjEnd = sdf.parse(openList.get(i).getEnd());
+                                String startHour = new SimpleDateFormat("hh:mm a").format(dateObjStart);
+                                String endHour = new SimpleDateFormat("hh:mm a").format(dateObjEnd);
                                 if(todaysHours.equals("")){
                                     todaysHours = startHour + " - " + endHour;
                                 } else{
                                     todaysHours = todaysHours + ", " + startHour + " - " + endHour;
                                 }
+
+                                Calendar cal = Calendar.getInstance();
+                                cal.set(Calendar.MONTH, 0);
+                                cal.set(Calendar.YEAR, 1970);
+                                cal.set(Calendar.DAY_OF_YEAR, 1);
+                                Date currDate = cal.getTime();
+                                System.out.println(endHour);
+                                if(openList.get(i).getIsOvernight() || endHour.equals("12:00 AM")){
+                                    Calendar calTemp = Calendar.getInstance();
+                                    calTemp.setTime(dateObjEnd);
+                                    calTemp.set(Calendar.DAY_OF_YEAR, 2);
+                                    dateObjEnd = calTemp.getTime();
+                                }
+                                TextView closedView = (TextView) view.findViewById(R.id.closed);
+                                if((dateObjStart.before(currDate)) && (currDate.before(dateObjEnd))) {
+                                    closedView.setText("Open");
+                                    closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorOpen));
+                                }else{
+                                    closedView.setText("Closed");
+                                    closedView.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorClosed));
+                                }
+
                             } catch (final ParseException e) {
                                 e.printStackTrace();
                             }
@@ -207,6 +241,73 @@ public class Location extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v){
         switch (v.getId()) {
+
+        }
+    }
+    @Override
+    public void onStart(){
+        super.onStart();
+
+        // Create recycler options
+        // This contains our query and will be passed into the adapter
+        FirebaseRecyclerOptions<Profile> options =
+                new FirebaseRecyclerOptions.Builder<Profile>()
+                        .setQuery(guideListReference, Profile.class)
+                        .build();
+
+        // create recycler adapter
+        FirebaseRecyclerAdapter<Profile, GuideListViewHolder> adapter =
+                new FirebaseRecyclerAdapter<Profile, GuideListViewHolder>(options) {
+                    @Override
+                    protected void onBindViewHolder(@NonNull final GuideListViewHolder holder, int position, @NonNull Profile model) {
+                        // Iterate through user IDs attached to current user
+
+                        // Get userID at current position
+                        final String userIDs = getRef(position).getKey();
+
+                        usersReference.child(userIDs).addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                // TODO add datasnapshot for profile image
+
+                                final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
+                                holder.displayName.setText(retrievedDisplayName);
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+                                // display error
+                                holder.displayName.setText(databaseError.toString());
+                            }
+                        });
+                    }
+
+                    @NonNull
+                    @Override
+                    public GuideListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+                        // Create view to display profiles and return it
+                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.profile_item_view, viewGroup, false);
+                        return new GuideListViewHolder(v);
+                    }
+                };
+
+        // Set adapter and start listening
+        guideList.setAdapter(adapter);
+        adapter.startListening();
+
+    }
+
+    public static class GuideListViewHolder extends RecyclerView.ViewHolder {
+        ImageView profilePhoto;
+        TextView displayName;
+        RatingBar guideRating;
+
+        public GuideListViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            profilePhoto = itemView.findViewById(R.id.user_profile_photo);
+            displayName = itemView.findViewById(R.id.user_display_name);
+            guideRating = itemView.findViewById(R.id.guide_rating);
 
         }
     }

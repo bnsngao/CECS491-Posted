@@ -47,19 +47,6 @@ public class DiscoverLocations extends Fragment implements View.OnClickListener{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-//        List<LocationItem> mList = new ArrayList<>();
-//        String temp;
-//        for(int i = 0; i < 10; i++) {
-//            temp = "Location #" + (i + 1);
-//            mList.add(new LocationItem(R.drawable.location_test, temp, temp + " test summary"));
-//        }
-
-        //set up recycler view with profileAdapter
-//        RecyclerView recyclerView = getView().findViewById(R.id.rv_location_list);
-//        LocationAdapter locationAdapter = new LocationAdapter(getActivity(), mList);
-//        recyclerView.setAdapter(locationAdapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
     }
 
     @Override
