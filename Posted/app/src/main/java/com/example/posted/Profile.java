@@ -1,32 +1,20 @@
 package com.example.posted;
 
-import android.net.Uri;
-import android.support.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-
 import java.util.HashMap;
 
 public class Profile {
     public String display_name;
     public boolean guide_status;
     public int rating;
-    public String profile_photo;
-    public String uid;
+    public int profile_photo;
     public HashMap<String, Boolean> food_prefs;
     public HashMap<String, Boolean> other_prefs;
 
     public Profile() {
     }
 
-    public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs) {
+    public Profile(String display_name,int rating, int profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs) {
         this.display_name = display_name;
-        this.uid = uid;
         this.rating = rating;
         this.profile_photo = profile_photo;
         this.guide_status = guide_status;
@@ -46,7 +34,7 @@ public class Profile {
         return rating;
     }
 
-    public String getProfile_photo() {
+    public int getProfile_photo() {
         return profile_photo;
     }
 
@@ -56,10 +44,6 @@ public class Profile {
 
     public void setGuideStatus(boolean guide_status) {
         this.guide_status = guide_status;
-    }
-
-    public String getUid() {
-        return uid;
     }
 
     public HashMap<String, Boolean> getFoodPrefs() {

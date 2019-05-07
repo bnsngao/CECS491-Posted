@@ -55,9 +55,9 @@ public class MainMenu extends AppCompatActivity
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private String display_name;
+    private boolean guide_status;
     private String uid;
     private String email;
-    private String profile_photo_url;
     private ImageView profilePicture;
     private StorageReference storageRef;
     private FirebaseStorage storage;
@@ -123,6 +123,18 @@ public class MainMenu extends AppCompatActivity
         TextView navEmail = (TextView) headerView.findViewById(R.id.user_email);
         navEmail.setText(email);
         profilePicture = headerView.findViewById(R.id.imageView);
+        storageRef.child("profileImages/" + user.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                // Got the download URL for 'users/me/profile.png'
+                Picasso.get().load(uri).into(profilePicture);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
         profilePicture.setOnClickListener(this);
     }
 
@@ -140,7 +152,7 @@ public class MainMenu extends AppCompatActivity
 
                     editor.putString(getString(R.string.display_name), user.getDisplayName());
                     editor.putBoolean(getString(R.string.guide_status), user.isGuide());
-                    Picasso.get().load(user.getProfile_photo()).into(profilePicture);
+
                     Set<String> foodEntries = new HashSet<String>();
                     String[] foodCategories = getResources().getStringArray(R.array.food_categories);
                     for(int i = 0; i < foodCategories.length; i++){
@@ -177,13 +189,9 @@ public class MainMenu extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if(getFragmentManager().getBackStackEntryCount() > 0){
-                getFragmentManager().popBackStack();
-        }
-        else {
-            super.onBackPressed();
-//            changeFragment(new Home());
+        } else {
+//            super.onBackPressed();
+            changeFragment(new Home());
         }
     }
 
@@ -234,12 +242,13 @@ public class MainMenu extends AppCompatActivity
     @Override
     public void changeFragment(Fragment fragment){
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.main_container, fragment).addToBackStack(null).commit();
+        ft.replace(R.id.main_container, fragment);
+        ft.commit();
     }
 
     @Override
     public void onListFragmentInteraction(Profile item) {
-        changeFragment(GuidePage.newInstance(item));
+        changeFragment(GuidePage.newInstance(item.display_name));
     }
 
     @Override
@@ -276,20 +285,8 @@ public class MainMenu extends AppCompatActivity
                 }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        storageRef.child("profileImages/" + user.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                            @Override
-                            public void onSuccess(Uri uri) {
-                                mDatabase.child("users").child(uid).child("profile_photo").setValue(uri.toString());
-                                Picasso.get().load(uri).into(profilePicture);
-
-                            }
-                        }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-//                                profile_photo = Uri.parse("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-                            }
-                        }
-                        );
+                        // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                        // ...
                     }
                 });
             } catch (FileNotFoundException e) {

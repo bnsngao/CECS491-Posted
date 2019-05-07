@@ -6,7 +6,8 @@
     android:name="com.example.posted.GuideFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:scrollbars="vertical"
+    android:layout_marginLeft="16dp"
+    android:layout_marginRight="16dp"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.example.posted.GuideFragment"
     tools:listitem="@layout/fragment_guide" />
