@@ -13,6 +13,8 @@ import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
+import java.net.URISyntaxException;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,6 +28,7 @@ public class GuidePage extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static String ARG_PARAM1 = "param1";
+    private static Profile profile1;
     private TextView guide_name;
     private ImageView guide_image;
     // TODO: Rename and change types of parameters
@@ -38,10 +41,10 @@ public class GuidePage extends Fragment {
     }
 
     // TODO: Rename and change types and number of parameters
-    public static GuidePage newInstance(String userID) {
+    public static GuidePage newInstance(Profile profile) {
         GuidePage fragment = new GuidePage();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, userID);
+        profile1 = profile;
         fragment.setArguments(args);
         return fragment;
     }
@@ -59,9 +62,9 @@ public class GuidePage extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guide_page, container,false);
         guide_name = view.findViewById(R.id.guide_name);
-        guide_name.setText(mParam1);
+        guide_name.setText(profile1.getDisplayName());
         guide_image = view.findViewById(R.id.guideProfileImage);
-        Picasso.get().load("https://img.icons8.com/material/4ac144/256/user-male.png").into(guide_image);
+        Picasso.get().load(profile1.getProfile_photo()).into(guide_image);
         return view;
     }
 
