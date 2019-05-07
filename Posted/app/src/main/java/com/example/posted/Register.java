@@ -3,6 +3,7 @@ package com.example.posted;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -69,7 +70,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
     private void registerUser(){
         final String email = editTextEmail.getText().toString().trim();
         final String display_name = editTextDisplayName.getText().toString();
-        String password = editTextPassword.getText().toString();
+        final String password = editTextPassword.getText().toString();
         String passwordConfirm = editTextPasswordConfirm.getText().toString();
 
         // Check if all the fields are entered
@@ -108,7 +109,9 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
 
                         // Initialize preferences
                         mDatabase.child("users").child(uid).child("display_name").setValue(display_name);
+                        mDatabase.child("users").child(uid).child("uid").setValue(uid);
                         mDatabase.child("users").child(uid).child("guide_status").setValue(false);
+                        mDatabase.child("users").child(uid).child("profile_photo").setValue("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
 
                         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
@@ -122,6 +125,7 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                             boolean selected = false;
                             mDatabase.child("users").child(uid).child("other_prefs").child(categories[i]).setValue(selected);
                         }
+                        Login(email,password);
                     }
                     else {
                         FirebaseAuthException e = (FirebaseAuthException )task.getException();
@@ -131,7 +135,24 @@ public class Register extends AppCompatActivity implements View.OnClickListener 
                 }
             });
     }
-
+    public void Login(String email, String password){
+        firebaseAuth.signInWithEmailAndPassword(email,password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            //Toast.makeText(Login.this, "Login Success", Toast.LENGTH_SHORT).show();
+                            finish();
+                            startActivity(new Intent(Register.this,MainMenu.class));
+                        }
+                        else {
+                            FirebaseAuthException e = (FirebaseAuthException )task.getException();
+                            Toast.makeText(Register.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                        progressDialog.dismiss();
+                    }
+                });
+    }
     @Override
     public void onClick(View view){
         if(view==buttonRegister){
