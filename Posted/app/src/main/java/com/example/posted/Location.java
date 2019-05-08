@@ -344,11 +344,9 @@ public class Location extends Fragment implements View.OnClickListener{
 
         public GuideListViewHolder(@NonNull View itemView) {
             super(itemView);
-
             profilePhoto = itemView.findViewById(R.id.guideProfileImage);
             displayName = itemView.findViewById(R.id.guideUsername);
             guideRating = itemView.findViewById(R.id.guideRatingBar);
-
         }
     }
 

@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 
 
 /**
@@ -47,6 +49,10 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private DatabaseReference locationListReference;
+    private RecyclerView locationList;
+    private ArrayList<String> arrayLocation;
+
+
 
     // TODO: Rename and change types of parameters
 
@@ -86,6 +92,8 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         chat_button = view.findViewById(R.id.chat_button);
         chat_button.setOnClickListener(this);
         locationListReference = FirebaseDatabase.getInstance().getReference().child("Locations");
+        locationList = (RecyclerView) view.findViewById(R.id.location_list);
+        locationList.setLayoutManager(new LinearLayoutManager(getContext()));
         if(user.getUid().equals(profile1.getUid())){
             chat_button.setVisibility(view.GONE);
         }
@@ -138,57 +146,26 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         void onFragmentInteraction(Uri uri);
     }
 
-//    @Override
-//    public void onStart() {
-//        super.onStart();
-//        // Create recycler options
-//        // This contains our query and will be passed into the adapter
-//        FirebaseRecyclerOptions<LocationItem> options =
-//                new FirebaseRecyclerOptions.Builder<LocationItem>()
-//                        .setQuery(locationListReference, LocationItem.class)
-//                        .build();
-//
-//        // create recycler adapter
-//        FirebaseRecyclerAdapter<Profile, Location.GuideListViewHolder> adapter =
-//                new FirebaseRecyclerAdapter<Profile, Location.GuideListViewHolder>(options) {
-//                    @Override
-//                    protected void onBindViewHolder(@NonNull final Location.GuideListViewHolder holder, int position, @NonNull Profile model) {
-//                        // Iterate through user IDs attached to current user
-//
-//                        // Get userID at current position
-//                        final String userIDs = getRef(position).getKey();
-//
-//                        usersReference.child(userIDs).addValueEventListener(new ValueEventListener() {
-//                            @Override
-//                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                                // TODO add datasnapshot for profile image
-//                                final String retrievedProfilePhoto = dataSnapshot.child("profile_photo").getValue().toString();
-//                                final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
-//                                Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
-//                                holder.displayName.setText(retrievedDisplayName);
-//                            }
-//
-//                            @Override
-//                            public void onCancelled(@NonNull DatabaseError databaseError) {
-//                                // display error
-//                                holder.displayName.setText(databaseError.toString());
-//                            }
-//                        });
-//                    }
-//
-//                    @NonNull
-//                    @Override
-//                    public Location.GuideListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-//                        // Create view to display profiles and return it
-//                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_guide, viewGroup, false);
-//                        return new Location.GuideListViewHolder(v);
-//                    }
-//                };
-//
-//        // Set adapter and start listening
-//        guideList.setAdapter(adapter);
-//        adapter.startListening();
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        arrayLocation = new ArrayList<>();
+        locationListReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Iterable<DataSnapshot> locationIDs = dataSnapshot.getChildren();
+                for(DataSnapshot location:locationIDs){
+                    if(location.child("Guides").child(profile1.getUid()).exists()){
+                        arrayLocation.add(location.getKey());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
 
     // Changes the fragment being displayed in the main page
     // Call with changeFragment(new FragmentConstructor());
