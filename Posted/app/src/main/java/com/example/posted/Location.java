@@ -133,7 +133,7 @@ public class Location extends Fragment implements View.OnClickListener{
                     latitude = business.getCoordinates().getLatitude();
 
                     // Business name
-                    String businessName = business.getName();  // "Ashoka The Great"
+                    String businessName = business.getName();
                     TextView businessNameView = (TextView) view.findViewById(R.id.location_name);
                     businessNameView.setText(businessName);
 
@@ -143,7 +143,7 @@ public class Location extends Fragment implements View.OnClickListener{
                     Picasso.get().load(imageUrl).into(imageView);
 
                     // Rating
-                    float rating = (float) business.getRating();  // 4.0
+                    float rating = (float) business.getRating();
                     RatingBar ratingBarView = (RatingBar) view.findViewById(R.id.rating);
                     ratingBarView.setRating(rating);
 
@@ -335,7 +335,6 @@ public class Location extends Fragment implements View.OnClickListener{
         // Set adapter and start listening
         guideList.setAdapter(adapter);
         adapter.startListening();
-
     }
 
     public static class GuideListViewHolder extends RecyclerView.ViewHolder {

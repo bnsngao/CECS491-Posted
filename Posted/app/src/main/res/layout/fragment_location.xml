@@ -9,7 +9,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/locationProfileImage"
+            android:id="@+id/locationImage"
             android:layout_width="125dp"
             android:layout_height="125dp"
             android:layout_marginRight="20dp"
@@ -25,11 +25,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/text_margin"
                 android:textAppearance="?attr/textAppearanceListItem" />
+
             <RatingBar
                 android:id="@+id/locationRatingBar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:isIndicator="true"/>
+                android:isIndicator="true"
+                android:stepSize="0.5" />
         </LinearLayout>
     </LinearLayout>
 

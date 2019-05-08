@@ -23,6 +23,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.yelp.fusion.client.models.Business;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -98,6 +99,7 @@ public class GuideFragment extends Fragment {
 //                ArrayList<Profile> profiles = new ArrayList<>();
                 for(DataSnapshot user:userIDS){
                     Profile p = user.getValue(Profile.class);
+
                     {
                         if (p.isGuide()){
                             DummyContent.ITEMS.add(p);
