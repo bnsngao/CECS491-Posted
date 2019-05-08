@@ -143,6 +143,7 @@ public class LocationFragment extends Fragment {
                         // Rating
                         float rating = (float) business.getRating();
                         LocationItem l = new LocationItem(imageUrl,businessName,businessId,rating);
+
                         LOCATION_ITEMS.add(l);
                         mAdapter.notifyDataSetChanged();
 
