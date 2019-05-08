@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.posted.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -36,6 +37,8 @@ import java.util.List;
 public class GuideFragment extends Fragment {
     private DatabaseReference mDatabase;
     private MyGuideRecyclerViewAdapter mAdapter;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentUser;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -67,6 +70,8 @@ public class GuideFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
     }
 
     @Override
@@ -94,7 +99,7 @@ public class GuideFragment extends Fragment {
                 for(DataSnapshot user:userIDS){
                     Profile p = user.getValue(Profile.class);
                     {
-                        if (p.isGuide()){
+                        if (p.isGuide()&&!p.getUid().equals(currentUser.getUid())){
                             DummyContent.ITEMS.add(p);
                             mAdapter.notifyDataSetChanged();
                         }

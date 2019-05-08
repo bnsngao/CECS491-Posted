@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 
 import java.net.URISyntaxException;
@@ -29,12 +31,12 @@ import java.net.URISyntaxException;
 public class GuidePage extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static String ARG_PARAM1 = "param1";
     private static Profile profile1;
     private TextView guide_name;
     private ImageView guide_image;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
     // TODO: Rename and change types of parameters
-    private String mParam1;
 
     private Button chat_button;
 
@@ -56,9 +58,9 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-        }
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+
     }
 
     @Override
@@ -71,6 +73,10 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         Picasso.get().load(profile1.getProfile_photo()).into(guide_image);
         chat_button = view.findViewById(R.id.chat_button);
         chat_button.setOnClickListener(this);
+        if(user.getUid().equals(profile1.getUid())){
+            chat_button.setVisibility(view.GONE);
+        }
+
         return view;
     }
 

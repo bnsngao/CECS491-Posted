@@ -191,8 +191,22 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if(id == R.id.nav_viewProfile){
+            DatabaseReference myRef = mDatabase.child("users").child(uid);
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Profile myProfile = dataSnapshot.getValue(Profile.class);
+                    changeFragment(new GuidePage().newInstance(myProfile));
+                }
 
-        if (id == R.id.nav_locations) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+        else if (id == R.id.nav_locations) {
             changeFragment(new DiscoverLocations());
         } else if (id == R.id.nav_guides) {
             changeFragment(new GuideFragment());
