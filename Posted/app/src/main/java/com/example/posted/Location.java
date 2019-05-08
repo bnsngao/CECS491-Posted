@@ -17,15 +17,20 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -81,6 +86,11 @@ public class Location extends Fragment implements View.OnClickListener{
     private DatabaseReference guideListReference, // reference for guides
             usersReference; // info for guides
     private RecyclerView guideList;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+    private String uid;
+    private DatabaseReference mDatabase;
+    private Profile userSnapshot;
 
 
     public Location() {
@@ -131,6 +141,7 @@ public class Location extends Fragment implements View.OnClickListener{
                 public void onResponse(Call<Business> call, Response<Business> response) {
                     business = response.body();
                     String businessId = business.getId();
+                    System.out.println(businessId);
 
                     // Business name
                     String businessName = business.getName();  // "Ashoka The Great"
@@ -141,11 +152,6 @@ public class Location extends Fragment implements View.OnClickListener{
                     String imageUrl = business.getImageUrl();
                     ImageView imageView = (ImageView) view.findViewById(R.id.location_picture);
                     Picasso.get().load(imageUrl).into(imageView);
-
-                    // Distance
-                    double distance = business.getDistance();
-                    TextView distanceView = (TextView) view.findViewById(R.id.distance);
-                    distanceView.setText(distance + " mi");
 
                     // Rating
                     float rating = (float) business.getRating();  // 4.0
@@ -231,6 +237,45 @@ public class Location extends Fragment implements View.OnClickListener{
 
             call = yelpFusionApi.getBusiness(locationID);
             call.enqueue(callback);
+
+            // Get user information (display display_name, email, and profile pic) from Firebase
+            firebaseAuth = FirebaseAuth.getInstance();
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            if(firebaseAuth.getCurrentUser() != null){
+                user = firebaseAuth.getCurrentUser();
+                uid = user.getUid();
+            }
+
+            DatabaseReference ref = mDatabase.child("users").child(uid);
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        userSnapshot = dataSnapshot.getValue(Profile.class);
+                        boolean visited = userSnapshot.getLocations().containsKey(locationID);
+                        Switch s = (Switch) view.findViewById(R.id.visited);
+                        s.setChecked(visited);
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+            Switch s = (Switch) view.findViewById(R.id.visited);
+            s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        mDatabase.child("users").child(uid).child("locations").child(locationID).setValue("1");
+                        if(userSnapshot.isGuide()){
+                            mDatabase.child("Locations").child(locationID).child("Guides").child(uid).child("guide_status").setValue(true);
+                        }
+                    } else {
+                        mDatabase.child("users").child(uid).child("locations").child(locationID).removeValue();
+                        mDatabase.child("Locations").child(locationID).child("Guides").child(uid).child("guide_status").removeValue();
+                    }
+                }
+            });
         }
         catch (IOException e) {
             e.printStackTrace();

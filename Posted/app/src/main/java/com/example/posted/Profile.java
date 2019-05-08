@@ -20,6 +20,7 @@ public class Profile {
     public String uid;
     public HashMap<String, Boolean> food_prefs;
     public HashMap<String, Boolean> other_prefs;
+    public HashMap<String, String> locations;
 
     public Profile() {
     }
@@ -32,7 +33,7 @@ public class Profile {
         this.guide_status = guide_status;
         this.food_prefs = food_prefs;
         this.other_prefs = other_prefs;
-        this.profile_photo = profile_photo;
+        this.locations = locations;
     }
 
 
@@ -76,7 +77,9 @@ public class Profile {
         return other_prefs;
     }
 
-    public void setOtherPrefs(HashMap<String, Boolean> other_prefs) {
-        this.other_prefs = other_prefs;
-    }
+    public void setOtherPrefs(HashMap<String, Boolean> other_prefs) { this.other_prefs = other_prefs; }
+
+    public HashMap<String, String> getLocations() { return locations; }
+
+    public void setLocations(HashMap<String, String> locations) { this.locations = locations; }
 }
