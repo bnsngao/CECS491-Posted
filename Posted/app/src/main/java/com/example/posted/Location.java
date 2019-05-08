@@ -1,13 +1,6 @@
 package com.example.posted;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.LocationManager;
-import android.media.Rating;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -22,13 +15,10 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -43,23 +33,13 @@ import com.yelp.fusion.client.models.Business;
 import com.yelp.fusion.client.models.Category;
 import com.yelp.fusion.client.models.Hour;
 import com.yelp.fusion.client.models.Open;
-import com.yelp.fusion.client.models.SearchResponse;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -125,7 +105,7 @@ public class Location extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =inflater.inflate(R.layout.fragment_location, container, false);
+        view =inflater.inflate(R.layout.fragment_location_page, container, false);
 
         guideListReference = FirebaseDatabase.getInstance().getReference().child("Locations").child(locationID).child("Guides");
         usersReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -320,8 +300,9 @@ public class Location extends Fragment implements View.OnClickListener{
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 // TODO add datasnapshot for profile image
-
+                                final String retrievedProfilePhoto = dataSnapshot.child("profile_photo").getValue().toString();
                                 final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
+                                Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                 holder.displayName.setText(retrievedDisplayName);
                             }
 
@@ -337,7 +318,7 @@ public class Location extends Fragment implements View.OnClickListener{
                     @Override
                     public GuideListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                         // Create view to display profiles and return it
-                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.profile_item_view, viewGroup, false);
+                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_guide, viewGroup, false);
                         return new GuideListViewHolder(v);
                     }
                 };
@@ -356,9 +337,9 @@ public class Location extends Fragment implements View.OnClickListener{
         public GuideListViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            profilePhoto = itemView.findViewById(R.id.user_profile_photo);
-            displayName = itemView.findViewById(R.id.user_display_name);
-            guideRating = itemView.findViewById(R.id.guide_rating);
+            profilePhoto = itemView.findViewById(R.id.guideProfileImage);
+            displayName = itemView.findViewById(R.id.guideUsername);
+            guideRating = itemView.findViewById(R.id.guideRatingBar);
 
         }
     }

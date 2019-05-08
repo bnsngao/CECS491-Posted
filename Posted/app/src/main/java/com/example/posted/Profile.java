@@ -25,7 +25,7 @@ public class Profile {
     public Profile() {
     }
 
-    public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs) {
+    public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs, HashMap<String, String> locations) {
         this.display_name = display_name;
         this.uid = uid;
         this.rating = rating;
