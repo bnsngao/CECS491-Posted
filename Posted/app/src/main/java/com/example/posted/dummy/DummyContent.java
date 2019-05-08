@@ -29,8 +29,8 @@ public class DummyContent extends Profile {
 //        ITEM_MAP.put(item.id, item);
     }
 
-    private static Profile createProfileItem(String display_name, int rating, int profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs) {
-        return new Profile(display_name,rating,profile_photo,guide_status,food_prefs,other_prefs);
+    private static Profile createProfileItem(String display_name, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs, HashMap<String, String> locations) {
+        return new Profile(display_name,rating,profile_photo,guide_status,food_prefs,other_prefs,locations);
     }
 
 }

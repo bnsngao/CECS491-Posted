@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
+import android.renderscript.Sampler;
 import android.support.design.widget.NavigationView;
 import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
@@ -26,9 +27,13 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -118,11 +123,38 @@ public class AccountSettings extends AppCompatPreferenceActivity
         if(key == getString(R.string.display_name)){
             String display_name = settings.getString(getString(R.string.display_name), null);
             mDatabase.child("users").child(uid).child("display_name").setValue(display_name);
-            Toast.makeText(getApplicationContext(), "Display name changed", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Display name changed", Toast.LENGTH_SHORT).show();
         } else if(key == getString(R.string.guide_status)){
-            Toast.makeText(getApplicationContext(), "Guide status changed", Toast.LENGTH_SHORT).show();
-            Boolean guide_status = settings.getBoolean(getString(R.string.guide_status), false);
+            final Boolean guide_status = settings.getBoolean(getString(R.string.guide_status), false);
             mDatabase.child("users").child(uid).child("guide_status").setValue(guide_status);
+
+            DatabaseReference ref = mDatabase.child("users").child(uid).child("locations");
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+               @Override
+               public void onDataChange(DataSnapshot dataSnapshot){
+                   HashMap<String, String> locationMap = (HashMap<String, String>) dataSnapshot.getValue();
+                   System.out.println(locationMap);
+                   if(!locationMap.isEmpty()){
+                       if(guide_status){
+                           for(String key : locationMap.keySet()){
+                               mDatabase.child("Locations").child(key).child("Guides").child(uid).setValue("1");
+                           }
+                       }else{
+                           for(String key : locationMap.keySet()){
+                               mDatabase.child("Locations").child(key).child("Guides").child(uid).removeValue();
+                           }
+                       }
+                   }
+               }
+
+               @Override
+                public void onCancelled(DatabaseError databaseError){
+
+               }
+            });
+
+
+
             //Toast.makeText(getApplicationContext(), "Guide status changed", Toast.LENGTH_SHORT).show();
         } else if(key == getString(R.string.pref_category_food)){
             Set<String> entries = settings.getStringSet(getString(R.string.pref_category_food), new HashSet<String>());
@@ -134,7 +166,7 @@ public class AccountSettings extends AppCompatPreferenceActivity
                 }
                 mDatabase.child("users").child(uid).child("food_prefs").child(categories[i]).setValue(selected);
             }
-            Toast.makeText(getApplicationContext(), "Food prefs changed", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Food prefs changed", Toast.LENGTH_SHORT).show();
         } else if(key == getString(R.string.pref_category_other)){
             Set<String> entries = settings.getStringSet(getString(R.string.pref_category_other), new HashSet<String>());
             String[] categories = getResources().getStringArray(R.array.other_categories);
@@ -145,7 +177,7 @@ public class AccountSettings extends AppCompatPreferenceActivity
                 }
                 mDatabase.child("users").child(uid).child("other_prefs").child(categories[i]).setValue(selected);
             }
-            Toast.makeText(getApplicationContext(), "Other prefs changed", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getApplicationContext(), "Other prefs changed", Toast.LENGTH_SHORT).show();
         }
     }
 
