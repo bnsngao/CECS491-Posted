@@ -335,7 +335,6 @@ public class Location extends Fragment implements View.OnClickListener{
         // Set adapter and start listening
         guideList.setAdapter(adapter);
         adapter.startListening();
-
     }
 
     public static class GuideListViewHolder extends RecyclerView.ViewHolder {

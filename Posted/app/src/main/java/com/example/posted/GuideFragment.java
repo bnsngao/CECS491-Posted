@@ -2,7 +2,6 @@ package com.example.posted;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,21 +10,15 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.RatingBar;
-import android.widget.Toast;
 
-import com.example.posted.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,6 +42,7 @@ public class GuideFragment extends Fragment {
     private HashMap<String,Boolean> my_food_prefs;
     private HashMap<String,Boolean> my_other_prefs;
     private OnListFragmentInteractionListener mListener;
+    public static final List<Profile> ITEMS = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -85,7 +79,7 @@ public class GuideFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guide_list, container, false);
         // Set the adapter
-        mAdapter = new MyGuideRecyclerViewAdapter(DummyContent.ITEMS, mListener);
+        mAdapter = new MyGuideRecyclerViewAdapter(ITEMS, mListener);
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -110,7 +104,7 @@ public class GuideFragment extends Fragment {
 
             }
         });
-        DummyContent.ITEMS.clear();
+        ITEMS.clear();
         DatabaseReference myRef = mDatabase.child("users");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -120,7 +114,7 @@ public class GuideFragment extends Fragment {
                     Profile p = user.getValue(Profile.class);
                     {
                         if (p.isGuide()&&!p.getUid().equals(currentUser.getUid())){
-                            DummyContent.ITEMS.add(p);
+                            ITEMS.add(p);
                             mAdapter.notifyDataSetChanged();
                             HashMap<String,Boolean> temp_food_prefs = p.food_prefs;
                             HashMap<String,Boolean> temp_other_prefs = p.other_prefs;
