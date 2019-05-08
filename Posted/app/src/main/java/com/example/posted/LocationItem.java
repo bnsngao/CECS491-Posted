@@ -1,26 +1,21 @@
 package com.example.posted;
 
 public class LocationItem {
-    int locationPhoto;
-    String locationName;
-    String locationSummary;
+    private String locationPhoto;
+    private String locationName;
+    private int rating;
 
     public LocationItem() {
         this.locationName = "sample_location_name";
-        this.locationSummary = "sample_location_summary";
+        this.locationPhoto = "";
+        this.rating = 0;
     }
 
-    public LocationItem(int locationPhoto, String locationName, String locationSummary) {
-        this.locationPhoto = locationPhoto;
-        this.locationName = locationName;
-        this.locationSummary = locationSummary;
-    }
-
-    public int getLocationPhoto() {
+    public String getLocationPhoto() {
         return locationPhoto;
     }
 
-    public void setLocationPhoto(int locationPhoto) {
+    public void setLocationPhoto(String locationPhoto) {
         this.locationPhoto = locationPhoto;
     }
 
@@ -32,11 +27,12 @@ public class LocationItem {
         this.locationName = locationName;
     }
 
-    public String getLocationSummary() {
-        return locationSummary;
+    public int getRating() {
+        return rating;
     }
 
-    public void setLocationSummary(String locationSummary) {
-        this.locationSummary = locationSummary;
+    public void setRating(int rating) {
+        this.rating = rating;
     }
+
 }

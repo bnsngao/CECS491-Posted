@@ -197,7 +197,7 @@ public class MainMenu extends AppCompatActivity
         } else if (id == R.id.nav_guides) {
             changeFragment(new GuideFragment());
         } else if (id == R.id.nav_chats) {
-            changeFragment(new Chat());
+            changeFragment(new ChatList());
         } else if (id == R.id.nav_account) {
             startActivity(new Intent(this, AccountSettings.class));
             overridePendingTransition(0, 0);
@@ -223,9 +223,9 @@ public class MainMenu extends AppCompatActivity
         } else if (uri.toString().equals(getString(R.string.discover_guides))){
             changeFragment(new GuideFragment());
         } else if (uri.toString().equals(getString(R.string.chat))){
-            changeFragment(new Chat());
+            changeFragment(new ChatList());
         } else if (uri.toString().equals(getString(R.string.location))){
-            changeFragment(Location.newInstance("m-and-m-donuts-anaheim"));
+            changeFragment(Location.newInstance("fg9XJ8kWd6BQqEjjPreU0g"));
         }
     }
 

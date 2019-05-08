@@ -27,10 +27,11 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Username"
-        android:textSize="32dp"
+        android:textSize="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/profile_picture"
+        app:layout_constraintStart_toEndOf="@+id/user_profile_photo"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <RatingBar
         android:id="@+id/guide_rating"
@@ -41,4 +42,5 @@
         android:stepSize=".5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
+
 </android.support.constraint.ConstraintLayout>

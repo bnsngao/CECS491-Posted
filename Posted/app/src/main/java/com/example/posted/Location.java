@@ -1,13 +1,6 @@
 package com.example.posted;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.location.LocationManager;
-import android.media.Rating;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -17,15 +10,17 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -38,23 +33,13 @@ import com.yelp.fusion.client.models.Business;
 import com.yelp.fusion.client.models.Category;
 import com.yelp.fusion.client.models.Hour;
 import com.yelp.fusion.client.models.Open;
-import com.yelp.fusion.client.models.SearchResponse;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,11 +61,18 @@ public class Location extends Fragment implements View.OnClickListener{
     private Location userLocation;
     private String apiKey = "R6yVr4Q3RYIwMLnELCLqgoCaQeGsoYXoGgxYZo2jEIurtkAs2uaookblm0J3fzz-7GGKPwDTiZ_N5xoxygiPUIwymxXvppyySCe-f9HUWZVrOR_dwj7wMN5W0-jDXHYx";
     private Business business;
+    double longitude;
+    double latitude;
     private Call<Business> call;
     private View view;
     private DatabaseReference guideListReference, // reference for guides
             usersReference; // info for guides
     private RecyclerView guideList;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
+    private String uid;
+    private DatabaseReference mDatabase;
+    private Profile userSnapshot;
 
 
     public Location() {
@@ -113,7 +105,7 @@ public class Location extends Fragment implements View.OnClickListener{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        view =inflater.inflate(R.layout.fragment_location, container, false);
+        view =inflater.inflate(R.layout.fragment_location_page, container, false);
 
         guideListReference = FirebaseDatabase.getInstance().getReference().child("Locations").child(locationID).child("Guides");
         usersReference = FirebaseDatabase.getInstance().getReference().child("users");
@@ -131,6 +123,11 @@ public class Location extends Fragment implements View.OnClickListener{
                 public void onResponse(Call<Business> call, Response<Business> response) {
                     business = response.body();
                     String businessId = business.getId();
+                    System.out.println(businessId);
+
+                    // Business coordinates
+                    longitude = business.getCoordinates().getLongitude();
+                    latitude = business.getCoordinates().getLatitude();
 
                     // Business name
                     String businessName = business.getName();  // "Ashoka The Great"
@@ -141,11 +138,6 @@ public class Location extends Fragment implements View.OnClickListener{
                     String imageUrl = business.getImageUrl();
                     ImageView imageView = (ImageView) view.findViewById(R.id.location_picture);
                     Picasso.get().load(imageUrl).into(imageView);
-
-                    // Distance
-                    double distance = business.getDistance();
-                    TextView distanceView = (TextView) view.findViewById(R.id.distance);
-                    distanceView.setText(distance + " mi");
 
                     // Rating
                     float rating = (float) business.getRating();  // 4.0
@@ -231,6 +223,50 @@ public class Location extends Fragment implements View.OnClickListener{
 
             call = yelpFusionApi.getBusiness(locationID);
             call.enqueue(callback);
+
+            // Get user information (display display_name, email, and profile pic) from Firebase
+            firebaseAuth = FirebaseAuth.getInstance();
+            mDatabase = FirebaseDatabase.getInstance().getReference();
+            if(firebaseAuth.getCurrentUser() != null){
+                user = firebaseAuth.getCurrentUser();
+                uid = user.getUid();
+            }
+
+            DatabaseReference ref = mDatabase.child("users").child(uid);
+            ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    if(dataSnapshot.exists()){
+                        userSnapshot = dataSnapshot.getValue(Profile.class);
+                        try{
+                            boolean visited = userSnapshot.getLocations().containsKey(locationID);
+                            Switch s = (Switch) view.findViewById(R.id.visited);
+                            s.setChecked(visited);
+                        } catch(NullPointerException e){
+                            Switch s = (Switch) view.findViewById(R.id.visited);
+                            s.setChecked(false);
+                        }
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                }
+            });
+
+            Switch s = (Switch) view.findViewById(R.id.visited);
+            s.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    if (isChecked) {
+                        mDatabase.child("users").child(uid).child("locations").child(locationID).setValue("1");
+                        if(userSnapshot.isGuide()){
+                            mDatabase.child("Locations").child(locationID).child("Guides").child(uid).child("guide_status").setValue(true);
+                        }
+                    } else {
+                        mDatabase.child("users").child(uid).child("locations").child(locationID).removeValue();
+                        mDatabase.child("Locations").child(locationID).child("Guides").child(uid).child("guide_status").removeValue();
+                    }
+                }
+            });
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -269,8 +305,9 @@ public class Location extends Fragment implements View.OnClickListener{
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 // TODO add datasnapshot for profile image
-
+                                final String retrievedProfilePhoto = dataSnapshot.child("profile_photo").getValue().toString();
                                 final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
+                                Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                 holder.displayName.setText(retrievedDisplayName);
                             }
 
@@ -286,7 +323,7 @@ public class Location extends Fragment implements View.OnClickListener{
                     @Override
                     public GuideListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                         // Create view to display profiles and return it
-                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.profile_item_view, viewGroup, false);
+                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_guide, viewGroup, false);
                         return new GuideListViewHolder(v);
                     }
                 };
@@ -305,9 +342,9 @@ public class Location extends Fragment implements View.OnClickListener{
         public GuideListViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            profilePhoto = itemView.findViewById(R.id.user_profile_photo);
-            displayName = itemView.findViewById(R.id.user_display_name);
-            guideRating = itemView.findViewById(R.id.guide_rating);
+            profilePhoto = itemView.findViewById(R.id.guideProfileImage);
+            displayName = itemView.findViewById(R.id.guideUsername);
+            guideRating = itemView.findViewById(R.id.guideRatingBar);
 
         }
     }

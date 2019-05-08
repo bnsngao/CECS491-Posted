@@ -20,11 +20,12 @@ public class Profile {
     public String uid;
     public HashMap<String, Boolean> food_prefs;
     public HashMap<String, Boolean> other_prefs;
+    public HashMap<String, String> locations;
 
     public Profile() {
     }
 
-    public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs) {
+    public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs, HashMap<String, String> locations) {
         this.display_name = display_name;
         this.uid = uid;
         this.rating = rating;
@@ -32,7 +33,9 @@ public class Profile {
         this.guide_status = guide_status;
         this.food_prefs = food_prefs;
         this.other_prefs = other_prefs;
+        this.locations = locations;
     }
+
 
     public void setDisplayName(String display_name) {
         this.display_name = display_name;
@@ -74,7 +77,9 @@ public class Profile {
         return other_prefs;
     }
 
-    public void setOtherPrefs(HashMap<String, Boolean> other_prefs) {
-        this.other_prefs = other_prefs;
-    }
+    public void setOtherPrefs(HashMap<String, Boolean> other_prefs) { this.other_prefs = other_prefs; }
+
+    public HashMap<String, String> getLocations() { return locations; }
+
+    public void setLocations(HashMap<String, String> locations) { this.locations = locations; }
 }
