@@ -4,9 +4,11 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,7 +26,7 @@ import java.net.URISyntaxException;
  * Use the {@link GuidePage#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class GuidePage extends Fragment {
+public class GuidePage extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static String ARG_PARAM1 = "param1";
@@ -33,6 +35,8 @@ public class GuidePage extends Fragment {
     private ImageView guide_image;
     // TODO: Rename and change types of parameters
     private String mParam1;
+
+    private Button chat_button;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,6 +69,8 @@ public class GuidePage extends Fragment {
         guide_name.setText(profile1.getDisplayName());
         guide_image = view.findViewById(R.id.guideProfileImage);
         Picasso.get().load(profile1.getProfile_photo()).into(guide_image);
+        chat_button = view.findViewById(R.id.chat_button);
+        chat_button.setOnClickListener(this);
         return view;
     }
 
@@ -92,6 +98,13 @@ public class GuidePage extends Fragment {
         mListener = null;
     }
 
+    @Override
+    public void onClick(View v) {
+        if (v == chat_button) {
+            changeFragment(new Chat().newInstance(profile1.getUid()));
+        }
+    }
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -105,5 +118,12 @@ public class GuidePage extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    // Changes the fragment being displayed in the main page
+    // Call with changeFragment(new FragmentConstructor());
+    public void changeFragment(Fragment fragment){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.main_container, fragment).addToBackStack(null).commit();
     }
 }
