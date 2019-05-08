@@ -5,29 +5,42 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-
-import com.google.android.gms.maps.GoogleMap;
+import android.support.v4.app.Fragment;
 
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-public class GoogleMaps extends FragmentActivity{
+public class GoogleMaps extends Fragment{
 
-    GoogleMap map;
+    private static double lat = 0;
+    private static double longi = 0;
+
+    //pass in coordinates that is retrieved from the Location.java file
+    public static GoogleMaps newInstance(double double1, double double2){
+        GoogleMaps fragment = new GoogleMaps();
+        Bundle args = new Bundle();
+        lat = double1;
+        longi = double2;
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public GoogleMaps(){
+
+    }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
 
-        double coLat = 33.93296348731534; //placeholder coordinates (pass in Ben's coordinates)
-        double coLong = -118.11800479888916; //current coordinates for raising canes in Downey
+        double coLat = lat;
+        double coLong = longi;
 
         Geocoder geocoder;
         List<Address> addresses = null;
-        geocoder = new Geocoder(this, Locale.getDefault());
+        geocoder = new Geocoder(getContext(), Locale.getDefault());
 
         try {
             addresses = geocoder.getFromLocation(coLat, coLong, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
@@ -51,7 +64,7 @@ public class GoogleMaps extends FragmentActivity{
         Uri gmmIntentUri = Uri.parse("geo:"+coLat+", "+coLong+"?q="+fullAddress);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
-        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+        if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivity(mapIntent);
         }
     }
