@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -74,6 +75,7 @@ public class Location extends Fragment implements View.OnClickListener{
     private String uid;
     private DatabaseReference mDatabase;
     private Profile userSnapshot;
+    private Button googleMapsButton;
 
     public Location() {
         // Required empty public constructor
@@ -106,7 +108,8 @@ public class Location extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =inflater.inflate(R.layout.fragment_location_page, container, false);
-
+        googleMapsButton = view.findViewById(R.id.mapsButton);
+        googleMapsButton.setOnClickListener(this);
         guideListReference = FirebaseDatabase.getInstance().getReference().child("Locations").child(locationID).child("Guides");
         usersReference = FirebaseDatabase.getInstance().getReference().child("users");
         guideList = (RecyclerView) view.findViewById(R.id.guide_list);
@@ -276,10 +279,8 @@ public class Location extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v){
-        switch(v.getId()){
-            case R.id.mapsButton:
+        if (v == googleMapsButton){
             mListener.changeFragment(new GoogleMaps().newInstance(latitude, longitude));
-            break;
         }
     }
 
