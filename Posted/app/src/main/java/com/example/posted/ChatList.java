@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -23,6 +24,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -174,8 +176,10 @@ public class ChatList extends Fragment implements View.OnClickListener {
                                 // TODO add datasnapshot for profile image
 
                                 if (dataSnapshot.exists()) {
+                                    final String retrievedProfilePhoto = dataSnapshot.child("profile_photo").getValue().toString();
                                     final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
 
+                                    Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                     holder.displayName.setText(retrievedDisplayName);
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -199,7 +203,7 @@ public class ChatList extends Fragment implements View.OnClickListener {
                     @Override
                     public ChatListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                         // Create view to display profiles and return it
-                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.profile_item_view, viewGroup, false);
+                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_guide, viewGroup, false);
                         return new ChatListViewHolder(v);
                     }
                 };
@@ -212,12 +216,14 @@ public class ChatList extends Fragment implements View.OnClickListener {
     public static class ChatListViewHolder extends RecyclerView.ViewHolder {
         ImageView profilePhoto;
         TextView displayName;
+        RatingBar profileRating;
 
         public ChatListViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            profilePhoto = itemView.findViewById(R.id.user_profile_photo);
-            displayName = itemView.findViewById(R.id.user_display_name);
+            profilePhoto = itemView.findViewById(R.id.guideProfileImage);
+            displayName = itemView.findViewById(R.id.guideUsername);
+            profileRating = itemView.findViewById(R.id.guideRatingBar);
         }
     }
 
@@ -226,7 +232,6 @@ public class ChatList extends Fragment implements View.OnClickListener {
     // Call with changeFragment(new FragmentConstructor());
     public void changeFragment(Fragment fragment){
         FragmentTransaction ft = getFragmentManager().beginTransaction();
-        ft.replace(R.id.main_container, fragment);
-        ft.commit();
+        ft.replace(R.id.main_container, fragment).addToBackStack(null).commit();
     }
 }
