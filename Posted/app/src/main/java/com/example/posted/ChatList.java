@@ -203,7 +203,7 @@ public class ChatList extends Fragment implements View.OnClickListener {
                     @Override
                     public ChatListViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
                         // Create view to display profiles and return it
-                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.profile_item_view, viewGroup, false);
+                        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.fragment_guide, viewGroup, false);
                         return new ChatListViewHolder(v);
                     }
                 };
@@ -221,9 +221,9 @@ public class ChatList extends Fragment implements View.OnClickListener {
         public ChatListViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            profilePhoto = itemView.findViewById(R.id.user_profile_photo);
-            displayName = itemView.findViewById(R.id.user_display_name);
-            profileRating = itemView.findViewById(R.id.guide_rating);
+            profilePhoto = itemView.findViewById(R.id.guideProfileImage);
+            displayName = itemView.findViewById(R.id.guideUsername);
+            profileRating = itemView.findViewById(R.id.guideRatingBar);
         }
     }
 
