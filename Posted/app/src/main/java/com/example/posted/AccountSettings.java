@@ -5,25 +5,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
-import android.renderscript.Sampler;
-import android.support.design.widget.NavigationView;
-import android.support.v7.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
+import android.support.v7.app.ActionBar;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -35,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -50,7 +39,7 @@ import java.util.Set;
  * API Guide</a> for more information on developing a AccountSettings UI.
  */
 public class AccountSettings extends AppCompatPreferenceActivity
-        implements SharedPreferences.OnSharedPreferenceChangeListener{
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
     private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
     private FirebaseUser user;
@@ -117,23 +106,23 @@ public class AccountSettings extends AppCompatPreferenceActivity
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences settings, String key){
+    public void onSharedPreferenceChanged(SharedPreferences settings, String key) {
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if(key == getString(R.string.display_name)){
+        if (key == getString(R.string.display_name)) {
             String display_name = settings.getString(getString(R.string.display_name), null);
             mDatabase.child("users").child(uid).child("display_name").setValue(display_name);
             //Toast.makeText(getApplicationContext(), "Display name changed", Toast.LENGTH_SHORT).show();
-        } else if(key == getString(R.string.guide_status)){
+        } else if (key == getString(R.string.guide_status)) {
             final Boolean guide_status = settings.getBoolean(getString(R.string.guide_status), false);
             mDatabase.child("users").child(uid).child("guide_status").setValue(guide_status);
 
             DatabaseReference ref = mDatabase.child("users").child(uid).child("locations");
             ref.addListenerForSingleValueEvent(new ValueEventListener() {
-               @Override
-               public void onDataChange(DataSnapshot dataSnapshot){
-                   HashMap<String, String> locationMap = (HashMap<String, String>) dataSnapshot.getValue();
-                    if(locationMap != null) {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    HashMap<String, String> locationMap = (HashMap<String, String>) dataSnapshot.getValue();
+                    if (locationMap != null) {
                         if (!locationMap.isEmpty()) {
                             if (guide_status) {
                                 for (String key : locationMap.keySet()) {
@@ -146,34 +135,32 @@ public class AccountSettings extends AppCompatPreferenceActivity
                             }
                         }
                     }
-               }
+                }
 
-               @Override
-                public void onCancelled(DatabaseError databaseError){
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
 
-               }
+                }
             });
 
-
-
             //Toast.makeText(getApplicationContext(), "Guide status changed", Toast.LENGTH_SHORT).show();
-        } else if(key == getString(R.string.pref_category_food)){
+        } else if (key == getString(R.string.pref_category_food)) {
             Set<String> entries = settings.getStringSet(getString(R.string.pref_category_food), new HashSet<String>());
             String[] categories = getResources().getStringArray(R.array.food_categories);
-            for(int i = 0; i < categories.length; i++) {
+            for (int i = 0; i < categories.length; i++) {
                 boolean selected = false;
-                if(entries.contains(Integer.toString(i+1))){
+                if (entries.contains(Integer.toString(i + 1))) {
                     selected = true;
                 }
                 mDatabase.child("users").child(uid).child("food_prefs").child(categories[i]).setValue(selected);
             }
             //Toast.makeText(getApplicationContext(), "Food prefs changed", Toast.LENGTH_SHORT).show();
-        } else if(key == getString(R.string.pref_category_other)){
+        } else if (key == getString(R.string.pref_category_other)) {
             Set<String> entries = settings.getStringSet(getString(R.string.pref_category_other), new HashSet<String>());
             String[] categories = getResources().getStringArray(R.array.other_categories);
-            for(int i = 0; i < categories.length; i++) {
+            for (int i = 0; i < categories.length; i++) {
                 boolean selected = false;
-                if(entries.contains(Integer.toString(i+1))){
+                if (entries.contains(Integer.toString(i + 1))) {
                     selected = true;
                 }
                 mDatabase.child("users").child(uid).child("other_prefs").child(categories[i]).setValue(selected);
@@ -192,7 +179,7 @@ public class AccountSettings extends AppCompatPreferenceActivity
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
 
-        if(firebaseAuth.getCurrentUser() != null){
+        if (firebaseAuth.getCurrentUser() != null) {
             user = firebaseAuth.getCurrentUser();
             uid = user.getUid();
         }
