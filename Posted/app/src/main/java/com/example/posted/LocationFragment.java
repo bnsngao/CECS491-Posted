@@ -143,7 +143,6 @@ public class LocationFragment extends Fragment {
 
                     for(Business business : businesses){
                         final String businessId = business.getId();
-                        System.out.println(businessId);
 
                         // Business name
                         final String businessName = business.getName();
@@ -173,9 +172,7 @@ public class LocationFragment extends Fragment {
 
                         LOCATION_ITEMS.add(l);
                         mAdapter.notifyDataSetChanged();
-
                     }
-
                 }
                 @Override
                 public void onFailure(Call<SearchResponse> call, Throwable t) {
@@ -208,14 +205,12 @@ public class LocationFragment extends Fragment {
                 }
             }
 
-            System.out.println(categories);
             // general params
             params.put("categories", categories);
             params.put("location", "Long Beach");
             params.put("limit", "50");
 
             Call<SearchResponse> call = yelpFusionApi.getBusinessSearch(params);
-
             call.enqueue(callback);
 
         }

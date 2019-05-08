@@ -133,18 +133,19 @@ public class AccountSettings extends AppCompatPreferenceActivity
                @Override
                public void onDataChange(DataSnapshot dataSnapshot){
                    HashMap<String, String> locationMap = (HashMap<String, String>) dataSnapshot.getValue();
-                   System.out.println(locationMap);
-                   if(!locationMap.isEmpty()){
-                       if(guide_status){
-                           for(String key : locationMap.keySet()){
-                               mDatabase.child("Locations").child(key).child("Guides").child(uid).setValue("1");
-                           }
-                       }else{
-                           for(String key : locationMap.keySet()){
-                               mDatabase.child("Locations").child(key).child("Guides").child(uid).removeValue();
-                           }
-                       }
-                   }
+                    if(locationMap != null) {
+                        if (!locationMap.isEmpty()) {
+                            if (guide_status) {
+                                for (String key : locationMap.keySet()) {
+                                    mDatabase.child("Locations").child(key).child("Guides").child(uid).setValue("1");
+                                }
+                            } else {
+                                for (String key : locationMap.keySet()) {
+                                    mDatabase.child("Locations").child(key).child("Guides").child(uid).removeValue();
+                                }
+                            }
+                        }
+                    }
                }
 
                @Override
