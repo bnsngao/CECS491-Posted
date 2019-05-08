@@ -28,6 +28,30 @@
         <item>Bars</item>
     </string-array>
 
+    <string-array name="food_categories_yelp">
+        <item>newamerican,tradamerican</item>
+        <item>southern</item>
+        <item>chinese</item>
+        <item>korean</item>
+        <item>japanese</item>
+        <item>thai</item>
+        <item>vietnamese</item>
+        <item>indpak</item>
+        <item>hawaiian</item>
+        <item>mexican</item>
+        <item>italian</item>
+        <item>french</item>
+        <item>brazilian</item>
+        <item>seafood</item>
+        <item>steak</item>
+        <item>halal</item>
+        <item>delicatessen</item>
+        <item>cafes</item>
+        <item>foodtrucks</item>
+        <item>gastropubs</item>
+        <item>bars</item>
+    </string-array>
+
     <string-array name="food_categories_values">
         <item>1</item>
         <item>2</item>
@@ -50,6 +74,29 @@
         <item>19</item>
         <item>20</item>
         <item>21</item>
+    </string-array>
+
+    <string-array name="other_categories_yelp">
+        <item>shopping</item>
+        <item>nightlife</item>
+        <item>fitness</item>
+        <item>beautysvc</item>
+        <item>auto</item>
+        <item>homeservices</item>
+        <item>arts</item>
+        <item>health</item>
+        <item>professional</item>
+        <item>pets</item>
+        <item>realestate</item>
+        <item>hotelstravel</item>
+        <item>localservices</item>
+        <item>eventservices</item>
+        <item>publicservicesgovt</item>
+        <item>financialservices</item>
+        <item>education</item>
+        <item>religiousorgs</item>
+        <item>localflavor</item>
+        <item>massmedia</item>
     </string-array>
 
     <string-array name="other_categories">

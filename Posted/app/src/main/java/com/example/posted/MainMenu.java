@@ -41,7 +41,11 @@ import java.util.Set;
 
 public class MainMenu extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
-        OnFragmentInteractionListener, GuideFragment.OnListFragmentInteractionListener ,GuidePage.OnFragmentInteractionListener,View.OnClickListener {
+        OnFragmentInteractionListener,
+        GuideFragment.OnListFragmentInteractionListener,
+        GuidePage.OnFragmentInteractionListener,
+        LocationFragment.OnListFragmentInteractionListener,
+        View.OnClickListener {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
     private String display_name;
@@ -88,8 +92,6 @@ public class MainMenu extends AppCompatActivity
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        pullInformation();
-        updateInformation();
         // Initialize the main main container with the home fragment
         changeFragment(new Home());
     }
@@ -103,11 +105,13 @@ public class MainMenu extends AppCompatActivity
         updateInformation();
     }
 
-    private void updateInformation() {
+    public void updateInformation() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         View headerView = navigationView.getHeaderView(0);
+
         TextView navUsername = (TextView) headerView.findViewById(R.id.user_name);
         display_name = settings.getString(getString(R.string.display_name), null);
+        System.out.println(display_name);
         navUsername.setText(display_name);
         TextView navEmail = (TextView) headerView.findViewById(R.id.user_email);
         navEmail.setText(email);
@@ -124,34 +128,41 @@ public class MainMenu extends AppCompatActivity
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
 
-                if(dataSnapshot.exists()){
+                if(dataSnapshot.exists()) {
                     Profile user = dataSnapshot.getValue(Profile.class);
+                    NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+                    View headerView = navigationView.getHeaderView(0);
+
 
                     editor.putString(getString(R.string.display_name), user.getDisplayName());
+
                     editor.putBoolean(getString(R.string.guide_status), user.isGuide());
+                    profilePicture = headerView.findViewById(R.id.imageView);
                     Picasso.get().load(user.getProfile_photo()).into(profilePicture);
                     Set<String> foodEntries = new HashSet<String>();
                     String[] foodCategories = getResources().getStringArray(R.array.food_categories);
-                    for(int i = 0; i < foodCategories.length; i++){
-                        if(user.food_prefs.get(foodCategories[i])){
-                            foodEntries.add(Integer.toString(i+1));
-                        }else{
-                            foodEntries.remove(Integer.toString(i+1));
+                    for (int i = 0; i < foodCategories.length; i++) {
+                        if (user.food_prefs.get(foodCategories[i])) {
+                            foodEntries.add(Integer.toString(i + 1));
+                        } else {
+                            foodEntries.remove(Integer.toString(i + 1));
                         }
                     }
                     editor.putStringSet(getString(R.string.pref_category_food), foodEntries);
 
                     Set<String> otherEntries = new HashSet<String>();
                     String[] otherCategories = getResources().getStringArray(R.array.other_categories);
-                    for(int i = 0; i < otherCategories.length; i++){
-                        if(user.other_prefs.get(otherCategories[i])){
-                            otherEntries.add(Integer.toString(i+1));
-                        }else{
-                            otherEntries.remove(Integer.toString(i+1));
+                    for (int i = 0; i < otherCategories.length; i++) {
+                        if (user.other_prefs.get(otherCategories[i])) {
+                            otherEntries.add(Integer.toString(i + 1));
+                        } else {
+                            otherEntries.remove(Integer.toString(i + 1));
                         }
                     }
                     editor.putStringSet(getString(R.string.pref_category_other), otherEntries);
                     editor.commit();
+
+                    updateInformation();
                 }
             }
             @Override
@@ -188,15 +199,8 @@ public class MainMenu extends AppCompatActivity
                     Profile myProfile = dataSnapshot.getValue(Profile.class);
                     changeFragment(new GuidePage().newInstance(myProfile));
                 }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                }
-            });
-        }
-        else if (id == R.id.nav_locations) {
-            changeFragment(new DiscoverLocations());
+       else if (id == R.id.nav_locations) {
+            changeFragment(new LocationFragment());
         } else if (id == R.id.nav_guides) {
             changeFragment(new GuideFragment());
         } else if (id == R.id.nav_chats) {
@@ -243,6 +247,11 @@ public class MainMenu extends AppCompatActivity
     @Override
     public void onListFragmentInteraction(Profile item) {
         changeFragment(GuidePage.newInstance(item));
+    }
+
+    @Override
+    public void onListFragmentInteraction(String locationID) {
+        changeFragment(Location.newInstance(locationID));
     }
 
     @Override

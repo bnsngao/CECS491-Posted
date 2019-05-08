@@ -18,6 +18,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.yelp.fusion.client.models.Business;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -112,6 +113,7 @@ public class GuideFragment extends Fragment {
                 Iterable<DataSnapshot> userIDS = dataSnapshot.getChildren();
                 for(DataSnapshot user:userIDS){
                     Profile p = user.getValue(Profile.class);
+
                     {
                         if (p.isGuide()&&!p.getUid().equals(currentUser.getUid())){
                             ITEMS.add(p);
