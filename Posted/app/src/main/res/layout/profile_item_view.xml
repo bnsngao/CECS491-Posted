@@ -32,7 +32,7 @@
         app:layout_constraintStart_toEndOf="@+id/user_profile_photo"
         app:layout_constraintTop_toTopOf="parent" />
 
-<<<<<<< HEAD
+
     <RatingBar
         android:id="@+id/guide_rating"
         android:layout_width="245dp"
@@ -42,6 +42,5 @@
         android:stepSize=".5"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-=======
->>>>>>> chat
+
 </android.support.constraint.ConstraintLayout>

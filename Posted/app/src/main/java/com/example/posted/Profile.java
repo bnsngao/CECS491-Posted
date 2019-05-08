@@ -20,16 +20,11 @@ public class Profile {
     public String uid;
     public HashMap<String, Boolean> food_prefs;
     public HashMap<String, Boolean> other_prefs;
-    public String profile_photo;
 
     public Profile() {
     }
 
-<<<<<<< HEAD
     public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs) {
-=======
-    public Profile(String display_name, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs, String profile_photo) {
->>>>>>> chat
         this.display_name = display_name;
         this.uid = uid;
         this.rating = rating;
@@ -40,15 +35,10 @@ public class Profile {
         this.profile_photo = profile_photo;
     }
 
-<<<<<<< HEAD
+
     public void setDisplayName(String display_name) {
         this.display_name = display_name;
     }
-=======
-    public String getProfilePhoto() { return profile_photo; }
-
-    public void setProfilePhoto(String profile_photo) { this.profile_photo = profile_photo; }
->>>>>>> chat
 
     public String getDisplayName() {
         return display_name;
