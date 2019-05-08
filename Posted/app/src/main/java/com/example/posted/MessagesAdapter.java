@@ -69,14 +69,17 @@ public class MessagesAdapter extends RecyclerView.Adapter<MessagesAdapter.Messag
         });
 
         // display messages
-        messageViewHolder.receiverMessageText.setVisibility(View.INVISIBLE);
+        messageViewHolder.receiverMessageText.setVisibility(View.GONE);
+        messageViewHolder.senderMessageText.setVisibility(View.GONE);
 
         if (fromUserID.equals(messageSenderID)) {
+            messageViewHolder.senderMessageText.setVisibility(View.VISIBLE);
             // display for sender
             messageViewHolder.senderMessageText.setBackgroundResource(R.drawable.sender_message);
             messageViewHolder.senderMessageText.setTextColor(Color.WHITE);
             messageViewHolder.senderMessageText.setGravity(Gravity.LEFT);
             messageViewHolder.senderMessageText.setText(messages.getMessage());
+
         } else {
             messageViewHolder.receiverMessageText.setVisibility(View.VISIBLE);
 
