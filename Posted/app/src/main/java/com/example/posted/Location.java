@@ -238,9 +238,14 @@ public class Location extends Fragment implements View.OnClickListener{
                 public void onDataChange(DataSnapshot dataSnapshot) {
                     if(dataSnapshot.exists()){
                         userSnapshot = dataSnapshot.getValue(Profile.class);
-                        boolean visited = userSnapshot.getLocations().containsKey(locationID);
-                        Switch s = (Switch) view.findViewById(R.id.visited);
-                        s.setChecked(visited);
+                        try{
+                            boolean visited = userSnapshot.getLocations().containsKey(locationID);
+                            Switch s = (Switch) view.findViewById(R.id.visited);
+                            s.setChecked(visited);
+                        } catch(NullPointerException e){
+                            Switch s = (Switch) view.findViewById(R.id.visited);
+                            s.setChecked(false);
+                        }
                     }
                 }
                 @Override
