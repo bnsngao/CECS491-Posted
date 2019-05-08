@@ -19,7 +19,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecyclerViewAdapter.ViewHolder> {
 
@@ -43,6 +45,14 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).display_name);
         holder.mRating.setNumStars(mValues.get(position).rating);
+        HashMap<String, Boolean> otherPrefs = mValues.get(position).other_prefs;
+        HashMap<String, Boolean> foodPrefs = mValues.get(position).food_prefs;
+        for (Map.Entry<String, Boolean> entry : otherPrefs.entrySet()) {
+            String key = entry.getKey();
+            Boolean value = entry.getValue();
+            // ...
+        }
+
         Picasso.get().load(mValues.get(position).getProfile_photo()).into(holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -34,10 +34,8 @@ import java.util.List;
  * interface.
  */
 public class GuideFragment extends Fragment {
-    private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
     private MyGuideRecyclerViewAdapter mAdapter;
-    String userID;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
@@ -68,9 +66,7 @@ public class GuideFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-        firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        userID = firebaseAuth.getUid();
     }
 
     @Override
@@ -95,7 +91,6 @@ public class GuideFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> userIDS = dataSnapshot.getChildren();
-//                ArrayList<Profile> profiles = new ArrayList<>();
                 for(DataSnapshot user:userIDS){
                     Profile p = user.getValue(Profile.class);
                     {
@@ -105,12 +100,6 @@ public class GuideFragment extends Fragment {
                         }
                     }
                 }
-//                Profile profile = dataSnapshot.getValue(Profile.class);
-//                if (profile.isGuide()) {
-//                    DummyContent.ITEMS.add(profile);
-//                    Toast.makeText(getContext(), profile.display_name, Toast.LENGTH_SHORT).show();
-//                    mAdapter.notifyDataSetChanged();
-//                }
             }
 
             @Override
