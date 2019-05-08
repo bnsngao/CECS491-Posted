@@ -13,14 +13,14 @@ import java.util.Locale;
 
 public class GoogleMaps extends Fragment{
 
-    private static double lat = 0;
+    private static double lati = 0;
     private static double longi = 0;
 
     //pass in coordinates that is retrieved from the Location.java file
     public static GoogleMaps newInstance(double double1, double double2){
         GoogleMaps fragment = new GoogleMaps();
         Bundle args = new Bundle();
-        lat = double1;
+        lati = double1;
         longi = double2;
         fragment.setArguments(args);
         return fragment;
@@ -35,7 +35,7 @@ public class GoogleMaps extends Fragment{
     {
         super.onCreate(savedInstanceState);
 
-        double coLat = lat;
+        double coLat = lati;
         double coLong = longi;
 
         Geocoder geocoder;
@@ -60,7 +60,7 @@ public class GoogleMaps extends Fragment{
         String fullAddress = (address + ", " + city + ", " + state + " " + postalCode + " " + country + " ");
 
         //Searching for a specific address will display a pin at that location.
-        //Adding a lat/lng to the intent URI will bias the results towards a particular area:
+        //Adding a lati/lng to the intent URI will bias the results towards a particular area:
         Uri gmmIntentUri = Uri.parse("geo:"+coLat+", "+coLong+"?q="+fullAddress);
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
