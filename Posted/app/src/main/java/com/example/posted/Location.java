@@ -81,6 +81,8 @@ public class Location extends Fragment implements View.OnClickListener{
     private Location userLocation;
     private String apiKey = "R6yVr4Q3RYIwMLnELCLqgoCaQeGsoYXoGgxYZo2jEIurtkAs2uaookblm0J3fzz-7GGKPwDTiZ_N5xoxygiPUIwymxXvppyySCe-f9HUWZVrOR_dwj7wMN5W0-jDXHYx";
     private Business business;
+    double longitude;
+    double latitude;
     private Call<Business> call;
     private View view;
     private DatabaseReference guideListReference, // reference for guides
@@ -142,6 +144,10 @@ public class Location extends Fragment implements View.OnClickListener{
                     business = response.body();
                     String businessId = business.getId();
                     System.out.println(businessId);
+
+                    // Business coordinates
+                    longitude = business.getCoordinates().getLongitude();
+                    latitude = business.getCoordinates().getLatitude();
 
                     // Business name
                     String businessName = business.getName();  // "Ashoka The Great"
