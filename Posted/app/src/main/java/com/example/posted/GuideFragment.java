@@ -25,7 +25,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -43,6 +45,9 @@ public class GuideFragment extends Fragment {
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private Profile myProfile;
+    private HashMap<String,Boolean> my_food_prefs;
+    private HashMap<String,Boolean> my_other_prefs;
     private OnListFragmentInteractionListener mListener;
 
     /**
@@ -72,6 +77,7 @@ public class GuideFragment extends Fragment {
         mDatabase = FirebaseDatabase.getInstance().getReference();
         firebaseAuth = FirebaseAuth.getInstance();
         currentUser = firebaseAuth.getCurrentUser();
+
     }
 
     @Override
@@ -90,6 +96,20 @@ public class GuideFragment extends Fragment {
             }
             recyclerView.setAdapter(mAdapter);
         }
+        DatabaseReference myProfileRef = mDatabase.child("users").child(currentUser.getUid());
+        myProfileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                myProfile = dataSnapshot.getValue(Profile.class);
+                my_food_prefs = myProfile.food_prefs;
+                my_other_prefs = myProfile.other_prefs;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         DummyContent.ITEMS.clear();
         DatabaseReference myRef = mDatabase.child("users");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -102,6 +122,27 @@ public class GuideFragment extends Fragment {
                         if (p.isGuide()&&!p.getUid().equals(currentUser.getUid())){
                             DummyContent.ITEMS.add(p);
                             mAdapter.notifyDataSetChanged();
+                            HashMap<String,Boolean> temp_food_prefs = p.food_prefs;
+                            HashMap<String,Boolean> temp_other_prefs = p.other_prefs;
+                            ArrayList<String> similarities = new ArrayList<>();
+                            for (HashMap.Entry<String, Boolean> entry : temp_food_prefs.entrySet()) {
+                                for (HashMap.Entry<String, Boolean> entry2 : my_food_prefs.entrySet()) {
+                                    if(entry2.getKey().equals(entry.getKey())&&entry2.getValue().equals(entry.getValue())){
+                                        //System.out.println(p.display_name+" "+entry.getKey() + " = " + entry.getValue());
+                                        similarities.add(entry.getKey());
+                                    }
+                                }
+                            }
+                            for (HashMap.Entry<String, Boolean> entry : temp_other_prefs.entrySet()) {
+                                for (HashMap.Entry<String, Boolean> entry2 : my_other_prefs.entrySet()) {
+                                    if(entry2.getKey().equals(entry.getKey())&&entry2.getValue().equals(entry.getValue())){
+                                        //System.out.println(p.display_name+" "+entry.getKey() + " = " + entry.getValue());
+                                        similarities.add(entry.getKey());
+                                    }
+                                }
+                            }
+                            p.setSimilarities(similarities);
+                            //System.out.println(p.display_name+": "+similarities);
                         }
                     }
                 }

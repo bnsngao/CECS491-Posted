@@ -57,7 +57,6 @@ public class MainMenu extends AppCompatActivity
     private String display_name;
     private String uid;
     private String email;
-    private String profile_photo_url;
     private ImageView profilePicture;
     private StorageReference storageRef;
     private FirebaseStorage storage;
