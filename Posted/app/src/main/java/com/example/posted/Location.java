@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -73,7 +74,6 @@ public class Location extends Fragment implements View.OnClickListener{
     private String uid;
     private DatabaseReference mDatabase;
     private Profile userSnapshot;
-
 
     public Location() {
         // Required empty public constructor
@@ -276,10 +276,13 @@ public class Location extends Fragment implements View.OnClickListener{
 
     @Override
     public void onClick(View v){
-        switch (v.getId()) {
-
+        switch(v.getId()){
+            case R.id.mapsButton:
+            mListener.changeFragment(new GoogleMaps().newInstance(latitude, longitude));
+            break;
         }
     }
+
     @Override
     public void onStart(){
         super.onStart();
