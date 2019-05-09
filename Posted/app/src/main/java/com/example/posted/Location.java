@@ -339,10 +339,18 @@ public class Location extends Fragment implements View.OnClickListener{
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 // TODO add datasnapshot for profile image
+                                final Profile user = dataSnapshot.getValue(Profile.class);
                                 final String retrievedProfilePhoto = dataSnapshot.child("profile_photo").getValue().toString();
                                 final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
                                 Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                 holder.displayName.setText(retrievedDisplayName);
+
+                                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        changeFragment(new GuidePage().newInstance(user));
+                                    }
+                                });
                             }
 
                             @Override
@@ -396,6 +404,13 @@ public class Location extends Fragment implements View.OnClickListener{
         super.onDetach();
         call.cancel();
         mListener = null;
+    }
+
+    // Changes the fragment being displayed in the main page
+    // Call with changeFragment(new FragmentConstructor());
+    public void changeFragment(Fragment fragment){
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.main_container, fragment).addToBackStack(null).commit();
     }
 
 }
