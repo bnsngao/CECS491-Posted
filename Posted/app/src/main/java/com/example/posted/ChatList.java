@@ -188,11 +188,10 @@ public class ChatList extends Fragment implements View.OnClickListener {
                                     temp++;
                                 }
 
-                                totalRating = retrievedRating / temp;
-                                usersReference.child(userIDs).child("ratings").child("total_rating").setValue(totalRating);
-
-                                System.out.println(retrievedRating);
-                                System.out.println(temp);
+                                if (temp != 0) {
+                                    totalRating = retrievedRating / temp;
+                                    usersReference.child(userIDs).child("ratings").child("total_rating").setValue(totalRating);
+                                }
 
                                 if (dataSnapshot.exists()) {
                                     final String retrievedProfilePhoto = dataSnapshot.child("profile_photo").getValue().toString();
