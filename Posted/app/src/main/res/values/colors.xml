@@ -9,4 +9,5 @@
     <color name="receiveMessageColor">#99ffcc</color>
     <color name="colorClosed">#cc0000</color>
     <color name="colorOpen">#00cc00</color>
+    <color name="outline">#8D8D8D</color>
 </resources>

@@ -1,6 +1,7 @@
 package com.example.posted;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -55,7 +57,6 @@ public class Chat extends Fragment implements View.OnClickListener{
     private EditText messageInput;
 
     private RecyclerView userMessagesList;
-
     private final List<Messages> messageList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private MessagesAdapter messagesAdapter;
@@ -65,6 +66,8 @@ public class Chat extends Fragment implements View.OnClickListener{
     private String messageReceiverName;
     private String messageSenderID;
 
+    private ImageView rateButton;
+
     // Create variables for time info storage within the database
     private String currDate, currTime;
 
@@ -73,6 +76,12 @@ public class Chat extends Fragment implements View.OnClickListener{
 
     // Create a root reference to the database for this instance
     private DatabaseReference rootReference;
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        rateButton.setVisibility(View.GONE);
+    }
 
     public Chat() {
         // Required empty public constructor
@@ -122,6 +131,7 @@ public class Chat extends Fragment implements View.OnClickListener{
                     Messages m = dataSnapshot.getValue(Messages.class);
                     messageList.add(m);
                     messagesAdapter.notifyDataSetChanged();
+                    userMessagesList.scrollToPosition(messageList.size()-1);
                 }
             }
 
@@ -180,14 +190,14 @@ public class Chat extends Fragment implements View.OnClickListener{
 
             // Create hashmaps for database references
             Map messageBody = new HashMap();
-                messageBody.put("message", messageText);
-                messageBody.put("time", saveCurrTime);
-                messageBody.put("date", saveCurrDate);
-                messageBody.put("from", messageSenderID);
+            messageBody.put("message", messageText);
+            messageBody.put("time", saveCurrTime);
+            messageBody.put("date", saveCurrDate);
+            messageBody.put("from", messageSenderID);
 
             Map messageBodyDetails = new HashMap();
-                messageBodyDetails.put(messageSenderReference + "/" + messagePushID, messageBody);
-                messageBodyDetails.put(messageReceiverReference + "/" + messagePushID, messageBody);
+            messageBodyDetails.put(messageSenderReference + "/" + messagePushID, messageBody);
+            messageBodyDetails.put(messageReceiverReference + "/" + messagePushID, messageBody);
 
             // Save the message to the database
 
@@ -226,6 +236,11 @@ public class Chat extends Fragment implements View.OnClickListener{
         sendMessageButton = view.findViewById(R.id.send_message_button);
         sendMessageButton.setOnClickListener(this);
 
+//        View view2 = inflater.inflate(R.layout.activity_main, container, false);
+        rateButton = getActivity().findViewById(R.id.rateImageButton);
+        rateButton.setVisibility(View.VISIBLE);
+        rateButton.setOnClickListener(this);
+
         // Setup EditText listener
         messageInput = view.findViewById(R.id.text_input_message);
 
@@ -249,6 +264,12 @@ public class Chat extends Fragment implements View.OnClickListener{
                 // Call SendMessage function
                 SendMessage();
                 break;
+        }
+        if (v==rateButton){
+            Intent intent = new Intent(getContext(), Rate.class);
+            intent.putExtra("guideID", messageReceiverID);
+            startActivity(intent);
+            //startActivity(new Intent(getContext(),Rate.class));
         }
     }
 
