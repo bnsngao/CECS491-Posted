@@ -15,21 +15,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.firebase.ui.database.FirebaseRecyclerAdapter;
-import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
-
-import java.net.URISyntaxException;
-import java.util.ArrayList;
 
 
 /**
@@ -48,9 +36,6 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     private ImageView guide_image;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
-    private DatabaseReference locationListReference;
-    private RecyclerView locationList;
-    private ArrayList<String> arrayLocation;
 
 
 
@@ -82,8 +67,7 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guide_page, container,false);
         guide_name = view.findViewById(R.id.guide_name);
         guide_name.setText(profile1.getDisplayName());
@@ -91,9 +75,6 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         Picasso.get().load(profile1.getProfile_photo()).into(guide_image);
         chat_button = view.findViewById(R.id.chat_button);
         chat_button.setOnClickListener(this);
-        locationListReference = FirebaseDatabase.getInstance().getReference().child("Locations");
-        locationList = (RecyclerView) view.findViewById(R.id.location_list);
-        locationList.setLayoutManager(new LinearLayoutManager(getContext()));
         if(user.getUid().equals(profile1.getUid())){
             chat_button.setVisibility(view.GONE);
         }
@@ -149,22 +130,6 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     @Override
     public void onStart() {
         super.onStart();
-        arrayLocation = new ArrayList<>();
-        locationListReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Iterable<DataSnapshot> locationIDs = dataSnapshot.getChildren();
-                for(DataSnapshot location:locationIDs){
-                    if(location.child("Guides").child(profile1.getUid()).exists()){
-                        arrayLocation.add(location.getKey());
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
     }
 
     // Changes the fragment being displayed in the main page
@@ -173,20 +138,4 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.main_container, fragment).addToBackStack(null).commit();
     }
-
-    public static class LocationListViewHolder extends RecyclerView.ViewHolder {
-        ImageView locationPhoto;
-        TextView locationName;
-        RatingBar locationRating;
-
-        public LocationListViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            locationPhoto = itemView.findViewById(R.id.locationImage);
-            locationName = itemView.findViewById(R.id.location_name);
-            locationRating = itemView.findViewById(R.id.locationRatingBar);
-
-        }
-    }
-
 }
