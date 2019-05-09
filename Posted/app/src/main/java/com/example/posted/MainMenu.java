@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
@@ -180,11 +181,11 @@ public class MainMenu extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+        }
+        else if (getFragmentManager().getBackStackEntryCount() > 0) {
             getFragmentManager().popBackStack();
         } else {
             super.onBackPressed();
-//            changeFragment(new Home());
         }
     }
 
@@ -192,7 +193,12 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.nav_viewProfile) {
+        if(id == R.id.nav_home){
+            clearBackStack();
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.main_container, new Home()).commit();
+        }
+        else if(id == R.id.nav_viewProfile) {
             DatabaseReference myRef = mDatabase.child("users").child(uid);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -318,5 +324,11 @@ public class MainMenu extends AppCompatActivity
             }
         }
     }
-
+    private void clearBackStack() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() > 0) {
+            FragmentManager.BackStackEntry first = manager.getBackStackEntryAt(0);
+            manager.popBackStack(first.getId(), FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+    }
 }
