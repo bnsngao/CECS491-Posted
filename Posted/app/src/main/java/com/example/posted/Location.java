@@ -344,7 +344,21 @@ public class Location extends Fragment implements View.OnClickListener{
                                 final String retrievedDisplayName = dataSnapshot.child("display_name").getValue().toString();
                                 Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                 holder.displayName.setText(retrievedDisplayName);
+                                DatabaseReference totalRating = mDatabase.child("users").child(user.getUid()).child("ratings").child("total_rating");
+                                totalRating.addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                        if(dataSnapshot.getValue()!= null){
+                                            holder.guideRating.setRating(Float.parseFloat(dataSnapshot.getValue().toString()));
+                                        }
 
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                                    }
+                                });
                                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                                     @Override
                                     public void onClick(View v) {
