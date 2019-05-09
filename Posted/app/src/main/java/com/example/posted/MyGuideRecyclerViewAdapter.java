@@ -15,6 +15,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
@@ -25,6 +30,7 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
 
     private final List<Profile> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private DatabaseReference mDatabase;
 
     public MyGuideRecyclerViewAdapter(List<Profile> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -35,6 +41,7 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_guide, parent, false);
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         return new ViewHolder(view);
     }
 
@@ -48,6 +55,21 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
         else {
             holder.mSimilarity.setText(Integer.toString(mValues.get(position).getSimilarities().size()));
         }
+        DatabaseReference totalRating = mDatabase.child("users").child(mValues.get(position).getUid()).child("ratings").child("total_rating");
+        totalRating.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()!= null){
+                    holder.mRating.setRating(Float.parseFloat(dataSnapshot.getValue().toString()));
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         holder.mRating.setRating(mValues.get(position).rating);
         Picasso.get().load(mValues.get(position).getProfile_photo()).into(holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {

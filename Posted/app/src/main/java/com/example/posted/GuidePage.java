@@ -66,7 +66,7 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     private Call<Business> call;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser user;
-
+    private RatingBar ratingBar;
 
     // TODO: Rename and change types of parameters
 
@@ -104,6 +104,7 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         Picasso.get().load(profile1.getProfile_photo()).into(guide_image);
         chat_button = view.findViewById(R.id.chat_button);
         chat_button.setOnClickListener(this);
+        ratingBar = view.findViewById(R.id.guideRatingBar);
 
         View messageDividerView = view.findViewById(R.id.messageDivider);
 
@@ -117,7 +118,21 @@ public class GuidePage extends Fragment implements View.OnClickListener {
 
         // Get user information (display display_name, email, and profile pic) from Firebase
         mDatabase = FirebaseDatabase.getInstance().getReference();
+        DatabaseReference totalRating = mDatabase.child("users").child(profile1.getUid()).child("ratings").child("total_rating");
+        totalRating.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.getValue()!= null){
+                    ratingBar.setRating(Float.parseFloat(dataSnapshot.getValue().toString()));
+                }
 
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
 
         // Set the adapter
         mAdapter = new LocationAdapter(LOCATION_ITEMS, mListener);
