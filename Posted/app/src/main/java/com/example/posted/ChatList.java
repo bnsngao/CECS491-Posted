@@ -199,8 +199,11 @@ public class ChatList extends Fragment implements View.OnClickListener {
 
                                     Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                     holder.displayName.setText(retrievedDisplayName);
-                                    holder.profileRating.setRating(totalRating);
-                                    holder.profileRating.setIsIndicator(true);
+                                    if (totalRating != 0) {
+                                        holder.profileRating.setRating(totalRating);
+                                        holder.profileRating.setIsIndicator(true);
+                                    }
+                                    
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
