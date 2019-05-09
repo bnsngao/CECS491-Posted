@@ -97,7 +97,8 @@ public class MainMenu extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Initialize the main main container with the home fragment
-        changeFragment(new Home());
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.main_container, new Home()).commit();
     }
 
     @Override
