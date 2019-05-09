@@ -29,6 +29,7 @@
             android:label="@string/title_activity_settings" />
         <activity
             android:name=".MainMenu"
+            android:noHistory="true"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Login"
