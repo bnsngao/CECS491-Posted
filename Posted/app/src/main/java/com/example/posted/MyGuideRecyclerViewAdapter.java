@@ -15,11 +15,11 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecyclerViewAdapter.ViewHolder> {
 
@@ -42,6 +42,12 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).display_name);
+        if(mValues.get(position).getSimilarities().isEmpty()){
+            holder.mSimilarity.setText("0");
+        }
+        else {
+            holder.mSimilarity.setText(Integer.toString(mValues.get(position).getSimilarities().size()));
+        }
         holder.mRating.setNumStars(mValues.get(position).rating);
         Picasso.get().load(mValues.get(position).getProfile_photo()).into(holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
@@ -64,6 +70,7 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
     public class ViewHolder extends RecyclerView.ViewHolder {
         public final View mView;
         public final TextView mContentView;
+        public final TextView mSimilarity;
         public Profile mItem;
         public RatingBar mRating;
         public ImageView mImageView;
@@ -71,6 +78,7 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
             super(view);
             mView = view;
             mContentView = (TextView) view.findViewById(R.id.guideUsername);
+            mSimilarity = view.findViewById(R.id.guideSimilarity);
             mRating = view.findViewById(R.id.guideRatingBar);
             mImageView = view.findViewById(R.id.guideProfileImage);
         }

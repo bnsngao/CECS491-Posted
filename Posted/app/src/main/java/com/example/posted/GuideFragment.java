@@ -2,7 +2,6 @@ package com.example.posted;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -11,21 +10,18 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.RatingBar;
-import android.widget.Toast;
 
-import com.example.posted.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.yelp.fusion.client.models.Business;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -35,15 +31,19 @@ import java.util.List;
  * interface.
  */
 public class GuideFragment extends Fragment {
-    private FirebaseAuth firebaseAuth;
     private DatabaseReference mDatabase;
     private MyGuideRecyclerViewAdapter mAdapter;
-    String userID;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser currentUser;
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
+    private Profile myProfile;
+    private HashMap<String,Boolean> my_food_prefs;
+    private HashMap<String,Boolean> my_other_prefs;
     private OnListFragmentInteractionListener mListener;
+    public static final List<Profile> ITEMS = new ArrayList<>();
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -69,9 +69,10 @@ public class GuideFragment extends Fragment {
         if (getArguments() != null) {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
-        firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
-        userID = firebaseAuth.getUid();
+        firebaseAuth = FirebaseAuth.getInstance();
+        currentUser = firebaseAuth.getCurrentUser();
+
     }
 
     @Override
@@ -79,7 +80,7 @@ public class GuideFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_guide_list, container, false);
         // Set the adapter
-        mAdapter = new MyGuideRecyclerViewAdapter(DummyContent.ITEMS, mListener);
+        mAdapter = new MyGuideRecyclerViewAdapter(ITEMS, mListener);
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
@@ -90,29 +91,57 @@ public class GuideFragment extends Fragment {
             }
             recyclerView.setAdapter(mAdapter);
         }
-        DummyContent.ITEMS.clear();
+        DatabaseReference myProfileRef = mDatabase.child("users").child(currentUser.getUid());
+        myProfileRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                myProfile = dataSnapshot.getValue(Profile.class);
+                my_food_prefs = myProfile.food_prefs;
+                my_other_prefs = myProfile.other_prefs;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+        ITEMS.clear();
         DatabaseReference myRef = mDatabase.child("users");
         myRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 Iterable<DataSnapshot> userIDS = dataSnapshot.getChildren();
-//                ArrayList<Profile> profiles = new ArrayList<>();
                 for(DataSnapshot user:userIDS){
                     Profile p = user.getValue(Profile.class);
 
                     {
-                        if (p.isGuide()){
-                            DummyContent.ITEMS.add(p);
+                        if (p.isGuide()&&!p.getUid().equals(currentUser.getUid())){
+                            ITEMS.add(p);
                             mAdapter.notifyDataSetChanged();
+                            HashMap<String,Boolean> temp_food_prefs = p.food_prefs;
+                            HashMap<String,Boolean> temp_other_prefs = p.other_prefs;
+                            ArrayList<String> similarities = new ArrayList<>();
+                            for (HashMap.Entry<String, Boolean> entry : temp_food_prefs.entrySet()) {
+                                for (HashMap.Entry<String, Boolean> entry2 : my_food_prefs.entrySet()) {
+                                    if(entry2.getKey().equals(entry.getKey())&&entry2.getValue().equals(entry.getValue())){
+                                        //System.out.println(p.display_name+" "+entry.getKey() + " = " + entry.getValue());
+                                        similarities.add(entry.getKey());
+                                    }
+                                }
+                            }
+                            for (HashMap.Entry<String, Boolean> entry : temp_other_prefs.entrySet()) {
+                                for (HashMap.Entry<String, Boolean> entry2 : my_other_prefs.entrySet()) {
+                                    if(entry2.getKey().equals(entry.getKey())&&entry2.getValue().equals(entry.getValue())){
+                                        //System.out.println(p.display_name+" "+entry.getKey() + " = " + entry.getValue());
+                                        similarities.add(entry.getKey());
+                                    }
+                                }
+                            }
+                            p.setSimilarities(similarities);
+                            //System.out.println(p.display_name+": "+similarities);
                         }
                     }
                 }
-//                Profile profile = dataSnapshot.getValue(Profile.class);
-//                if (profile.isGuide()) {
-//                    DummyContent.ITEMS.add(profile);
-//                    Toast.makeText(getContext(), profile.display_name, Toast.LENGTH_SHORT).show();
-//                    mAdapter.notifyDataSetChanged();
-//                }
             }
 
             @Override

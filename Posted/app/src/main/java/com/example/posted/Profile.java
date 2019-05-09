@@ -10,6 +10,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Profile {
@@ -21,11 +23,12 @@ public class Profile {
     public HashMap<String, Boolean> food_prefs;
     public HashMap<String, Boolean> other_prefs;
     public HashMap<String, String> locations;
+    public ArrayList<String> similarities;
 
     public Profile() {
     }
 
-    public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs, HashMap<String, String> locations) {
+    public Profile(String display_name, String uid, int rating, String profile_photo, boolean guide_status, HashMap<String, Boolean> food_prefs, HashMap<String, Boolean> other_prefs, HashMap<String, String> locations, ArrayList<String> similarities) {
         this.display_name = display_name;
         this.uid = uid;
         this.rating = rating;
@@ -34,8 +37,16 @@ public class Profile {
         this.food_prefs = food_prefs;
         this.other_prefs = other_prefs;
         this.locations = locations;
+        this.similarities = similarities;
     }
 
+    public ArrayList<String> getSimilarities() {
+        return similarities;
+    }
+
+    public void setSimilarities(ArrayList<String> similarities) {
+        this.similarities = similarities;
+    }
 
     public void setDisplayName(String display_name) {
         this.display_name = display_name;

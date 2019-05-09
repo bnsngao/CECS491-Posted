@@ -3,6 +3,7 @@ package com.example.posted;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.GridLayoutManager;
@@ -13,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -48,7 +50,6 @@ import retrofit2.Response;
 public class GuidePage extends Fragment implements View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static String ARG_PARAM1 = "param1";
     private static Profile profile1;
     private TextView guide_name;
     private ImageView guide_image;
@@ -62,10 +63,11 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     public static final List<LocationItem> LOCATION_ITEMS = new ArrayList<LocationItem>();
     private String apiKey = "R6yVr4Q3RYIwMLnELCLqgoCaQeGsoYXoGgxYZo2jEIurtkAs2uaookblm0J3fzz-7GGKPwDTiZ_N5xoxygiPUIwymxXvppyySCe-f9HUWZVrOR_dwj7wMN5W0-jDXHYx";
     private Call<Business> call;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseUser user;
 
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
 
     private Button chat_button;
 
@@ -86,9 +88,9 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-        }
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+
     }
 
     @Override
@@ -101,6 +103,14 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         Picasso.get().load(profile1.getProfile_photo()).into(guide_image);
         chat_button = view.findViewById(R.id.chat_button);
         chat_button.setOnClickListener(this);
+
+        View messageDividerView = view.findViewById(R.id.messageDivider);
+
+        if(user.getUid().equals(profile1.getUid())){
+            chat_button.setVisibility(view.GONE);
+            messageDividerView.setVisibility(View.GONE);
+
+        }
         uid = profile1.getUid();
 
 
@@ -244,6 +254,11 @@ public class GuidePage extends Fragment implements View.OnClickListener {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
     }
 
     // Changes the fragment being displayed in the main page

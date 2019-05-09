@@ -9,6 +9,8 @@ import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.view.View;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -51,7 +53,6 @@ public class MainMenu extends AppCompatActivity
     private String display_name;
     private String uid;
     private String email;
-    private String profile_photo_url;
     private ImageView profilePicture;
     private StorageReference storageRef;
     private FirebaseStorage storage;
@@ -190,8 +191,22 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+        if(id == R.id.nav_viewProfile) {
+            DatabaseReference myRef = mDatabase.child("users").child(uid);
+            myRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    Profile myProfile = dataSnapshot.getValue(Profile.class);
+                    changeFragment(new GuidePage().newInstance(myProfile));
+                }
 
-        if (id == R.id.nav_locations) {
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
+       else if (id == R.id.nav_locations) {
             changeFragment(new LocationFragment());
         } else if (id == R.id.nav_guides) {
             changeFragment(new GuideFragment());
