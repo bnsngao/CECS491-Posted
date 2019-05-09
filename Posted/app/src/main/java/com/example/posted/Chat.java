@@ -266,7 +266,10 @@ public class Chat extends Fragment implements View.OnClickListener{
                 break;
         }
         if (v==rateButton){
-            startActivity(new Intent(getContext(),Rate.class));
+            Intent intent = new Intent(getContext(), Rate.class);
+            intent.putExtra("guideID", messageReceiverID);
+            startActivity(intent);
+            //startActivity(new Intent(getContext(),Rate.class));
         }
     }
 

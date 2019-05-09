@@ -33,6 +33,9 @@ public class Rate extends AppCompatActivity implements View.OnClickListener {
         Cancel = findViewById(R.id.cancelButton);
         Rate.setOnClickListener(this);
         Cancel.setOnClickListener(this);
+        String guideID = getIntent().getStringExtra("guideID");
+        System.out.println(guideID);
+
     }
 
     @Override
