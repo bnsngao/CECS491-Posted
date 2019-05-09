@@ -182,7 +182,7 @@ public class GuidePage extends Fragment implements View.OnClickListener {
         public LocationListViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            locationPhoto = itemView.findViewById(R.id.locationProfileImage);
+            locationPhoto = itemView.findViewById(R.id.locationImage);
             locationName = itemView.findViewById(R.id.location_name);
             locationRating = itemView.findViewById(R.id.locationRatingBar);
 
