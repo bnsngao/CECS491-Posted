@@ -49,12 +49,12 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).display_name);
-        if(mValues.get(position).getSimilarities().isEmpty()){
-            holder.mSimilarity.setText("0");
-        }
-        else {
-            holder.mSimilarity.setText(Integer.toString(mValues.get(position).getSimilarities().size()));
-        }
+//        if(mValues.get(position).getSimilarities().isEmpty()){
+//            holder.mSimilarity.setText("0");
+//        }
+//        else {
+//            holder.mSimilarity.setText(Integer.toString(mValues.get(position).getSimilarities().size()));
+//        }
         DatabaseReference totalRating = mDatabase.child("users").child(mValues.get(position).getUid()).child("ratings").child("total_rating");
         totalRating.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
