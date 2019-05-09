@@ -51,7 +51,7 @@ public class ChatList extends Fragment implements View.OnClickListener {
 
     private int temp = 0;
 
-    private float totalRating;
+    private float totalRating = 0;
 
     private float retrievedRating;
 
