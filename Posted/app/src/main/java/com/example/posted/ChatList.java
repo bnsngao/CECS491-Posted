@@ -49,6 +49,10 @@ public class ChatList extends Fragment implements View.OnClickListener {
     // Private view
     private View chatView;
 
+    private int temp = 0;
+
+    private float retrievedRating;
+
     // Recycler view for displaying info
     private RecyclerView chatList;
 
@@ -173,7 +177,17 @@ public class ChatList extends Fragment implements View.OnClickListener {
                         usersReference.child(userIDs).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                                // TODO add datasnapshot for profile image
+                                temp = 0; // reset tracker
+                                retrievedRating = 0; // reset total rating
+
+                                // get total ratings and average them;
+                                for(DataSnapshot item_snapshot:dataSnapshot.child("ratings").getChildren()) {
+                                    retrievedRating += Float.parseFloat(item_snapshot.getValue().toString());
+                                    temp++;
+                                }
+
+                                System.out.println(retrievedRating);
+                                System.out.println(temp);
 
                                 if (dataSnapshot.exists()) {
                                     final String retrievedProfilePhoto = dataSnapshot.child("profile_photo").getValue().toString();
@@ -181,6 +195,8 @@ public class ChatList extends Fragment implements View.OnClickListener {
 
                                     Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                     holder.displayName.setText(retrievedDisplayName);
+                                    holder.profileRating.setRating(retrievedRating/(temp));
+                                    holder.profileRating.setIsIndicator(true);
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override

@@ -58,8 +58,9 @@ public class Rate extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v==Rate){
-            float rating = ratingBar.getRating();
+            float rating = (float) ratingBar.getRating();
             userReference.child("users").child(guideID).child("ratings").child(currentUID).setValue(rating);
+            finish();
         }
         else if (v==Cancel){
             finish();

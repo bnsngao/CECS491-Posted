@@ -48,7 +48,7 @@ public class MyGuideRecyclerViewAdapter extends RecyclerView.Adapter<MyGuideRecy
         else {
             holder.mSimilarity.setText(Integer.toString(mValues.get(position).getSimilarities().size()));
         }
-        holder.mRating.setNumStars(mValues.get(position).rating);
+        holder.mRating.setRating(mValues.get(position).rating);
         Picasso.get().load(mValues.get(position).getProfile_photo()).into(holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
