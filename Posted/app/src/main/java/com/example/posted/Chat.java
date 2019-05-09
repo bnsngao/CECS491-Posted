@@ -26,6 +26,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -60,12 +61,16 @@ public class Chat extends Fragment implements View.OnClickListener{
     private final List<Messages> messageList = new ArrayList<>();
     private LinearLayoutManager linearLayoutManager;
     private MessagesAdapter messagesAdapter;
+    private DatabaseReference usersReference;
 
     // TODO: change from hardcoding sending messages to test account to connecting two users
     private String messageReceiverID; //"HN7Ah7ShXGTu69oq3rakXBYzk4a2";
     private String messageReceiverName;
     private String messageSenderID;
+    private int temp = 0;
 
+    private float totalRating = 0;
+    private float retrievedRating;
     private ImageView rateButton;
 
     // Create variables for time info storage within the database
@@ -231,6 +236,7 @@ public class Chat extends Fragment implements View.OnClickListener{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_chat, container, false);
+        usersReference = FirebaseDatabase.getInstance().getReference().child("users");
 
         // Setup button listener
         sendMessageButton = view.findViewById(R.id.send_message_button);
@@ -252,11 +258,35 @@ public class Chat extends Fragment implements View.OnClickListener{
         userMessagesList.setHasFixedSize(true);
         userMessagesList.setLayoutManager(linearLayoutManager);
         userMessagesList.setAdapter(messagesAdapter);
-
-
+        updateRating();
         return view;
     }
+    public void updateRating(){
+        usersReference.child(messageReceiverID).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                temp = 0; // reset tracker
+                retrievedRating = 0; // reset total rating
 
+                // get total ratings and average them;
+                for (DataSnapshot item_snapshot : dataSnapshot.child("ratings").getChildren()) {
+                    retrievedRating += Float.parseFloat(item_snapshot.getValue().toString());
+                    temp++;
+                }
+
+                if (temp != 0) {
+                    totalRating = retrievedRating / temp;
+                    usersReference.child(messageReceiverID).child("ratings").child("total_rating").setValue(totalRating);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
     @Override
     public void onClick(View v){
         switch(v.getId()){

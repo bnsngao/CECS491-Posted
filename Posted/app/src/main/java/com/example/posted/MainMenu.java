@@ -66,7 +66,6 @@ public class MainMenu extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         // Get user information (display display_name, email, and profile pic) from Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -228,6 +227,7 @@ public class MainMenu extends AppCompatActivity
             overridePendingTransition(0, 0);
         } else if (id == R.id.sign_out) {
             firebaseAuth.signOut();
+            clearBackStack();
             startActivity(new Intent(this, Login.class));
         }
 
