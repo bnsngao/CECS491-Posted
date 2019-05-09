@@ -1,6 +1,7 @@
 package com.example.posted;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
@@ -226,6 +227,7 @@ public class Home extends Fragment implements View.OnClickListener {
     public void onClick(View v){
         switch (v.getId()) {
             case R.id.button_discover_locations:
+                //startActivity(new Intent(getContext(),Rate.class));
                 mListener2.onFragmentInteraction(Uri.parse(getString(R.string.discover_locations)));
                 break;
             case R.id.button_discover_guides:
