@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -171,6 +172,9 @@ public class GuidePage extends Fragment implements View.OnClickListener {
                                     System.out.println(LOCATION_ITEMS);
                                     mAdapter.notifyDataSetChanged();
 
+
+                                    ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressGuidePage);
+                                    progressBar.setVisibility(View.GONE);
                                 }
 
                                 @Override
@@ -195,11 +199,6 @@ public class GuidePage extends Fragment implements View.OnClickListener {
                 System.out.println("db error");
             }
         });
-
-
-//            Call<SearchResponse> call = yelpFusionApi.getBusinessSearch(params);
-//            call.enqueue(callback);
-
 
         return view;
     }

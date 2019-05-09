@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -32,6 +33,7 @@ import java.util.List;
  */
 public class GuideFragment extends Fragment {
     private DatabaseReference mDatabase;
+    private View view;
     private MyGuideRecyclerViewAdapter mAdapter;
     private FirebaseAuth firebaseAuth;
     private FirebaseUser currentUser;
@@ -78,12 +80,13 @@ public class GuideFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_guide_list, container, false);
+        view = inflater.inflate(R.layout.fragment_guide_list, container, false);
         // Set the adapter
         mAdapter = new MyGuideRecyclerViewAdapter(ITEMS, mListener);
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        View guideView = view.findViewById(R.id.guides_list);
+        if ( guideView instanceof RecyclerView) {
+            Context context = guideView.getContext();
+            RecyclerView recyclerView = (RecyclerView) guideView;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -91,6 +94,7 @@ public class GuideFragment extends Fragment {
             }
             recyclerView.setAdapter(mAdapter);
         }
+
         DatabaseReference myProfileRef = mDatabase.child("users").child(currentUser.getUid());
         myProfileRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -98,6 +102,11 @@ public class GuideFragment extends Fragment {
                 myProfile = dataSnapshot.getValue(Profile.class);
                 my_food_prefs = myProfile.food_prefs;
                 my_other_prefs = myProfile.other_prefs;
+
+
+                ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressGuideList);
+                progressBar.setVisibility(View.GONE);
+
             }
 
             @Override
