@@ -9,14 +9,31 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.RatingBar;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 public class Rate extends AppCompatActivity implements View.OnClickListener {
     private RatingBar ratingBar;
     private Button Rate;
     private Button Cancel;
+    private String guideID;
+    private String currentUID;
+
+    private FirebaseAuth mAuth;
+
+    private DatabaseReference userReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mAuth = FirebaseAuth.getInstance();
+
+        currentUID = mAuth.getCurrentUser().getUid();
+
+        userReference = FirebaseDatabase.getInstance().getReference();
+
         setContentView(R.layout.activity_rate);
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
@@ -33,7 +50,7 @@ public class Rate extends AppCompatActivity implements View.OnClickListener {
         Cancel = findViewById(R.id.cancelButton);
         Rate.setOnClickListener(this);
         Cancel.setOnClickListener(this);
-        String guideID = getIntent().getStringExtra("guideID");
+        guideID = getIntent().getStringExtra("guideID");
         System.out.println(guideID);
 
     }
@@ -41,7 +58,8 @@ public class Rate extends AppCompatActivity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         if(v==Rate){
-
+            float rating = ratingBar.getRating();
+            userReference.child("users").child(guideID).child("ratings").child(currentUID).setValue(rating);
         }
         else if (v==Cancel){
             finish();
