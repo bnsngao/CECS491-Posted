@@ -2,6 +2,7 @@ package com.example.posted;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Rating;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -197,7 +199,6 @@ public class Location extends Fragment implements View.OnClickListener{
                                 cal.set(Calendar.YEAR, 1970);
                                 cal.set(Calendar.DAY_OF_YEAR, 1);
                                 Date currDate = cal.getTime();
-                                System.out.println(endHour);
                                 if(openList.get(i).getIsOvernight() || endHour.equals("12:00 AM")){
                                     Calendar calTemp = Calendar.getInstance();
                                     calTemp.setTime(dateObjEnd);
@@ -220,6 +221,20 @@ public class Location extends Fragment implements View.OnClickListener{
                     }
                     TextView hoursView = (TextView) view.findViewById(R.id.hours);
                     hoursView.setText(todaysHours);
+
+                    ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressLocationPage);
+                    progressBar.setVisibility(View.GONE);
+                    ratingBarView.setVisibility(View.VISIBLE);
+                    TextView spacer = (TextView) view.findViewById(R.id.spacer);
+                    spacer.setVisibility(View.VISIBLE);
+                    TextView spacer2 = (TextView) view.findViewById(R.id.spacer2);
+                    spacer2.setVisibility(View.VISIBLE);
+                    yelpButton.setVisibility(View.VISIBLE);
+                    googleMapsButton.setVisibility(View.VISIBLE);
+                    Switch s = (Switch) view.findViewById(R.id.visited);
+                    s.setVisibility(View.VISIBLE);
+                    View dividerView = (View) view.findViewById(R.id.guideDivider);
+                    dividerView.setVisibility(View.VISIBLE);
 
                 }
                 @Override
@@ -275,10 +290,13 @@ public class Location extends Fragment implements View.OnClickListener{
                     }
                 }
             });
+
+
         }
         catch (IOException e) {
             e.printStackTrace();
         }
+
         return view;
     }
 
@@ -298,21 +316,23 @@ public class Location extends Fragment implements View.OnClickListener{
 
         // Create recycler options
         // This contains our query and will be passed into the adapter
+        System.out.println(guideListReference);
+
         FirebaseRecyclerOptions<Profile> options =
                 new FirebaseRecyclerOptions.Builder<Profile>()
                         .setQuery(guideListReference, Profile.class)
                         .build();
+        System.out.println(options.getSnapshots());
 
         // create recycler adapter
         FirebaseRecyclerAdapter<Profile, GuideListViewHolder> adapter =
                 new FirebaseRecyclerAdapter<Profile, GuideListViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final GuideListViewHolder holder, int position, @NonNull Profile model) {
-                        // Iterate through user IDs attached to current user
 
                         // Get userID at current position
                         final String userIDs = getRef(position).getKey();
-
+                        System.out.println(userIDs);
                         usersReference.child(userIDs).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {

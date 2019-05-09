@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,6 +66,7 @@ public class LocationFragment extends Fragment {
     private DatabaseReference mDatabase;
     private LocationAdapter mAdapter;
     String userID;
+    private View view;
     private String apiKey = "R6yVr4Q3RYIwMLnELCLqgoCaQeGsoYXoGgxYZo2jEIurtkAs2uaookblm0J3fzz-7GGKPwDTiZ_N5xoxygiPUIwymxXvppyySCe-f9HUWZVrOR_dwj7wMN5W0-jDXHYx";
     private Call<Business> call;
     // TODO: Customize parameter argument names
@@ -108,7 +110,7 @@ public class LocationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_location_list, container, false);
+        view = inflater.inflate(R.layout.fragment_location_list, container, false);
         // Get user information (display display_name, email, and profile pic) from Firebase
         firebaseAuth = FirebaseAuth.getInstance();
         mDatabase = FirebaseDatabase.getInstance().getReference();
@@ -119,9 +121,10 @@ public class LocationFragment extends Fragment {
         
         // Set the adapter
         mAdapter = new LocationAdapter(LOCATION_ITEMS, mListener);
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
+        View locationView = view.findViewById(R.id.locations_list);
+        if ( locationView instanceof RecyclerView) {
+            Context context = locationView.getContext();
+            RecyclerView recyclerView = (RecyclerView) locationView;
             if (mColumnCount <= 1) {
                 recyclerView.setLayoutManager(new LinearLayoutManager(context));
             } else {
@@ -148,10 +151,10 @@ public class LocationFragment extends Fragment {
                         final String businessName = business.getName();
 
                         // Business photo
-                        String imageUrl = business.getImageUrl();
+                        final String imageUrl = business.getImageUrl();
 
                         // Rating
-                        float rating = (float) business.getRating();
+                        final float rating = (float) business.getRating();
                         LocationItem l = new LocationItem(imageUrl,businessName,businessId,rating);
 
 
@@ -159,10 +162,14 @@ public class LocationFragment extends Fragment {
                         ref.addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot dataSnapshot) {
+                                System.out.println(dataSnapshot);
                                 if(dataSnapshot.exists()){
                                     if(!dataSnapshot.hasChild(businessId)){
-                                        mDatabase.child("Locations").child(businessId).child("business_name").setValue(businessName);
+                                        mDatabase.child("Locations").child(businessId).child("locationName").setValue(businessName);
+                                        mDatabase.child("Locations").child(businessId).child("locationID").setValue(businessId);
                                     }
+                                    mDatabase.child("Locations").child(businessId).child("locationPhoto").setValue(imageUrl);
+                                    mDatabase.child("Locations").child(businessId).child("rating").setValue(rating);
                                 }
                             }
                             @Override
@@ -172,6 +179,9 @@ public class LocationFragment extends Fragment {
 
                         LOCATION_ITEMS.add(l);
                         mAdapter.notifyDataSetChanged();
+
+                        ProgressBar progressBar = (ProgressBar) view.findViewById(R.id.progressLocationList);
+                        progressBar.setVisibility(View.GONE);
                     }
                 }
                 @Override
