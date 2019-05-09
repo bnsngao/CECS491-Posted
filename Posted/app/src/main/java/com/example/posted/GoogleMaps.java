@@ -66,6 +66,7 @@ public class GoogleMaps extends Fragment{
         mapIntent.setPackage("com.google.android.apps.maps");
         if (mapIntent.resolveActivity(getContext().getPackageManager()) != null) {
             startActivity(mapIntent);
+            getFragmentManager().popBackStack();
         }
     }
 }

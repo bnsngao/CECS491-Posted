@@ -305,7 +305,7 @@ public class Location extends Fragment implements View.OnClickListener{
     @Override
     public void onClick(View v){
         if (v == googleMapsButton){
-            mListener.changeFragment(new GoogleMaps().newInstance(latitude, longitude));
+            changeFragment(new GoogleMaps().newInstance(latitude, longitude));
         } else if (v == yelpButton){
             Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(business.getUrl()));
             startActivity(i);
@@ -426,5 +426,4 @@ public class Location extends Fragment implements View.OnClickListener{
         FragmentTransaction ft = getFragmentManager().beginTransaction();
         ft.replace(R.id.main_container, fragment).addToBackStack(null).commit();
     }
-
 }
