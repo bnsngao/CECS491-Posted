@@ -51,6 +51,8 @@ public class ChatList extends Fragment implements View.OnClickListener {
 
     private int temp = 0;
 
+    private float totalRating;
+
     private float retrievedRating;
 
     // Recycler view for displaying info
@@ -186,6 +188,9 @@ public class ChatList extends Fragment implements View.OnClickListener {
                                     temp++;
                                 }
 
+                                totalRating = retrievedRating / temp;
+                                usersReference.child(userIDs).child("ratings").child("total_rating").setValue(totalRating);
+
                                 System.out.println(retrievedRating);
                                 System.out.println(temp);
 
@@ -195,7 +200,7 @@ public class ChatList extends Fragment implements View.OnClickListener {
 
                                     Picasso.get().load(retrievedProfilePhoto).into(holder.profilePhoto);
                                     holder.displayName.setText(retrievedDisplayName);
-                                    holder.profileRating.setRating(retrievedRating/(temp));
+                                    holder.profileRating.setRating(totalRating);
                                     holder.profileRating.setIsIndicator(true);
 
                                     holder.itemView.setOnClickListener(new View.OnClickListener() {
