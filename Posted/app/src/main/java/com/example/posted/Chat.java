@@ -77,6 +77,12 @@ public class Chat extends Fragment implements View.OnClickListener{
     // Create a root reference to the database for this instance
     private DatabaseReference rootReference;
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        rateButton.setVisibility(View.GONE);
+    }
+
     public Chat() {
         // Required empty public constructor
     }
@@ -125,6 +131,7 @@ public class Chat extends Fragment implements View.OnClickListener{
                     Messages m = dataSnapshot.getValue(Messages.class);
                     messageList.add(m);
                     messagesAdapter.notifyDataSetChanged();
+                    userMessagesList.scrollToPosition(messageList.size()-1);
                 }
             }
 

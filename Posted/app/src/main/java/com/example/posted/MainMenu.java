@@ -57,6 +57,7 @@ public class MainMenu extends AppCompatActivity
     private StorageReference storageRef;
     private FirebaseStorage storage;
     private DatabaseReference mDatabase;
+    private ImageView rateButton;
     SharedPreferences settings;
     Fragment fragment;
 
