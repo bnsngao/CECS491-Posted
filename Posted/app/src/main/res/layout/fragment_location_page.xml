@@ -5,29 +5,16 @@
     android:layout_height="match_parent"
     tools:context="com.example.posted.Location">
 
+
     <ImageView
         android:id="@+id/location_picture"
+        android:scaleType="centerCrop"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/location_test"
-        app:layout_constraintBottom_toTopOf="@id/location_picture_guideline"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@id/location_name"
         app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/location_picture_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.3" />
-
-    <android.support.constraint.Guideline
-        android:id="@+id/location_title_guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.35" />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="0dp"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/location_left_guideline"
@@ -54,12 +41,11 @@
         android:id="@+id/location_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/location_name"
         android:textColor="@color/colorBlack"
+        android:layout_marginTop="2dp"
         android:textSize="32sp"
         android:textStyle="bold"
-        app:layout_constraintTop_toBottomOf="@id/location_picture_guideline"
-        app:layout_constraintBottom_toTopOf="@id/location_title_guideline"
+        app:layout_constraintTop_toBottomOf="@id/location_picture"
         app:layout_constraintStart_toStartOf="@id/location_left_guideline"/>
 
     <RatingBar
@@ -70,6 +56,7 @@
         android:isIndicator="true"
         android:rating="0.0"
         android:theme="@style/RatingBar"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@id/location_left_guideline"
         app:layout_constraintTop_toBottomOf="@id/location_name" />
 
@@ -78,7 +65,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="0 Reviews"
         app:layout_constraintStart_toEndOf="@id/rating"
         app:layout_constraintTop_toBottomOf="@id/location_name" />
 
@@ -88,15 +74,17 @@
         android:layout_height="wrap_content"
         android:text=""
         app:layout_constraintStart_toStartOf="@id/location_left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/rating" />
+        app:layout_constraintTop_toBottomOf="@id/closed" />
 
     <TextView
         android:id="@+id/spacer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:saveEnabled="false"
         android:text=" - "
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/price"
-        app:layout_constraintTop_toBottomOf="@id/rating" />
+        app:layout_constraintTop_toBottomOf="@id/closed" />
 
     <TextView
         android:id="@+id/categories"
@@ -104,7 +92,7 @@
         android:layout_height="wrap_content"
         android:text=""
         app:layout_constraintStart_toEndOf="@id/spacer"
-        app:layout_constraintTop_toBottomOf="@id/rating"/>
+        app:layout_constraintTop_toBottomOf="@id/closed"/>
 
     <TextView
         android:id="@+id/closed"
@@ -112,15 +100,16 @@
         android:layout_height="wrap_content"
         android:text=""
         app:layout_constraintStart_toStartOf="@id/location_left_guideline"
-        app:layout_constraintTop_toBottomOf="@id/price"/>
+        app:layout_constraintTop_toBottomOf="@id/rating"/>
 
     <TextView
         android:id="@+id/spacer2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=" - "
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@id/closed"
-        app:layout_constraintTop_toBottomOf="@id/price" />
+        app:layout_constraintTop_toBottomOf="@id/rating" />
 
     <TextView
         android:id="@+id/hours"
@@ -128,7 +117,7 @@
         android:layout_height="wrap_content"
         android:text=""
         app:layout_constraintStart_toEndOf="@id/spacer2"
-        app:layout_constraintTop_toBottomOf="@id/price" />
+        app:layout_constraintTop_toBottomOf="@id/rating" />
 
     <Button
         android:id="@+id/yelpButton"
@@ -137,9 +126,10 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:text="Open in Yelp"
+        android:visibility="gone"
         app:layout_constraintStart_toStartOf="@+id/location_left_guideline"
         app:layout_constraintEnd_toStartOf="@+id/location_mid_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/hours"/>
+        app:layout_constraintTop_toBottomOf="@+id/price"/>
 
     <Button
         android:id="@+id/mapsButton"
@@ -148,31 +138,43 @@
         android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:text="Open in Maps"
+        android:visibility="gone"
         app:layout_constraintStart_toEndOf="@+id/location_mid_guideline"
         app:layout_constraintEnd_toStartOf="@+id/location_right_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/hours" />
+        app:layout_constraintTop_toBottomOf="@+id/price" />
 
     <View
         android:id="@+id/guideDivider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?android:attr/listDivider"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@id/mapsButton" />
 
     <Switch
         android:id="@+id/visited"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:text="Visited?"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/location_right_guideline"
-        app:layout_constraintTop_toBottomOf="@+id/location_picture" />
+        app:layout_constraintTop_toBottomOf="@+id/location_name" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/guide_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        app:layout_constraintTop_toBottomOf="@id/guideDivider"></android.support.v7.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@id/guideDivider" />
+
+    <ProgressBar
+        android:id="@+id/progressLocationPage"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -26,7 +26,4 @@
             android:defaultValue="@array/empty_array"/>
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="Locations" android:summary="">
-
-    </PreferenceCategory>
 </PreferenceScreen>
