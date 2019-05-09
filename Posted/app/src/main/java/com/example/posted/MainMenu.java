@@ -7,16 +7,18 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -70,7 +72,7 @@ public class MainMenu extends AppCompatActivity
         storage = FirebaseStorage.getInstance();
         storageRef = storage.getReference();
 
-        if(firebaseAuth.getCurrentUser() != null){
+        if (firebaseAuth.getCurrentUser() != null) {
             user = firebaseAuth.getCurrentUser();
             uid = user.getUid();
             //getting preferences from a specified file
@@ -97,12 +99,11 @@ public class MainMenu extends AppCompatActivity
     }
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
 
         //Repopulate settings and displayed information from the database
         pullInformation();
-        updateInformation();
     }
 
     public void updateInformation() {
@@ -128,7 +129,7 @@ public class MainMenu extends AppCompatActivity
                 SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
                 SharedPreferences.Editor editor = settings.edit();
 
-                if(dataSnapshot.exists()) {
+                if (dataSnapshot.exists()) {
                     Profile user = dataSnapshot.getValue(Profile.class);
                     NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
                     View headerView = navigationView.getHeaderView(0);
@@ -165,6 +166,7 @@ public class MainMenu extends AppCompatActivity
                     updateInformation();
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
@@ -177,11 +179,9 @@ public class MainMenu extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        }
-        else if(getFragmentManager().getBackStackEntryCount() > 0){
-                getFragmentManager().popBackStack();
-        }
-        else {
+        } else if (getFragmentManager().getBackStackEntryCount() > 0) {
+            getFragmentManager().popBackStack();
+        } else {
             super.onBackPressed();
 //            changeFragment(new Home());
         }
@@ -191,7 +191,7 @@ public class MainMenu extends AppCompatActivity
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if(id == R.id.nav_viewProfile){
+        if(id == R.id.nav_viewProfile) {
             DatabaseReference myRef = mDatabase.child("users").child(uid);
             myRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -199,6 +199,13 @@ public class MainMenu extends AppCompatActivity
                     Profile myProfile = dataSnapshot.getValue(Profile.class);
                     changeFragment(new GuidePage().newInstance(myProfile));
                 }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                }
+            });
+        }
        else if (id == R.id.nav_locations) {
             changeFragment(new LocationFragment());
         } else if (id == R.id.nav_guides) {
@@ -210,8 +217,8 @@ public class MainMenu extends AppCompatActivity
             overridePendingTransition(0, 0);
         } else if (id == R.id.nav_notification) {
             startActivity(new Intent(this, NotificationSettings.class));
-            overridePendingTransition(0,0);
-        } else if (id == R.id.sign_out){
+            overridePendingTransition(0, 0);
+        } else if (id == R.id.sign_out) {
             firebaseAuth.signOut();
             startActivity(new Intent(this, Login.class));
         }
@@ -224,14 +231,14 @@ public class MainMenu extends AppCompatActivity
 
     // Handles onclicks for buttons in fragments
     @Override
-    public void onFragmentInteraction(Uri uri){
-        if(uri.toString().equals(getString(R.string.discover_locations))){
-            changeFragment(new DiscoverLocations());
-        } else if (uri.toString().equals(getString(R.string.discover_guides))){
+    public void onFragmentInteraction(Uri uri) {
+        if (uri.toString().equals(getString(R.string.discover_locations))) {
+            changeFragment(new LocationFragment());
+        } else if (uri.toString().equals(getString(R.string.discover_guides))) {
             changeFragment(new GuideFragment());
-        } else if (uri.toString().equals(getString(R.string.chat))){
+        } else if (uri.toString().equals(getString(R.string.chat))) {
             changeFragment(new ChatList());
-        } else if (uri.toString().equals(getString(R.string.location))){
+        } else if (uri.toString().equals(getString(R.string.location))) {
             changeFragment(Location.newInstance("fg9XJ8kWd6BQqEjjPreU0g"));
         }
     }
@@ -239,7 +246,7 @@ public class MainMenu extends AppCompatActivity
     // Changes the fragment being displayed in the main page
     // Call with changeFragment(new FragmentConstructor());
     @Override
-    public void changeFragment(Fragment fragment){
+    public void changeFragment(Fragment fragment) {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.main_container, fragment).addToBackStack(null).commit();
     }
@@ -256,10 +263,11 @@ public class MainMenu extends AppCompatActivity
 
     @Override
     public void onClick(View v) {
-        if(v == profilePicture){
+        if (v == profilePicture) {
             pickImage();
         }
     }
+
     public static final int PICK_IMAGE = 1;
 
     public void pickImage() {
@@ -267,9 +275,9 @@ public class MainMenu extends AppCompatActivity
         intent.setType("image/*");
         startActivityForResult(intent, PICK_IMAGE);
     }
+
     @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             if (data == null) {
@@ -296,11 +304,11 @@ public class MainMenu extends AppCompatActivity
 
                             }
                         }).addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception exception) {
 //                                profile_photo = Uri.parse("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-                            }
-                        }
+                                                    }
+                                                }
                         );
                     }
                 });
@@ -309,4 +317,5 @@ public class MainMenu extends AppCompatActivity
             }
         }
     }
+
 }

@@ -1,6 +1,8 @@
 package com.example.posted;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -76,6 +78,7 @@ public class Location extends Fragment implements View.OnClickListener{
     private DatabaseReference mDatabase;
     private Profile userSnapshot;
     private Button googleMapsButton;
+    private Button yelpButton;
 
     public Location() {
         // Required empty public constructor
@@ -110,6 +113,8 @@ public class Location extends Fragment implements View.OnClickListener{
         view =inflater.inflate(R.layout.fragment_location_page, container, false);
         googleMapsButton = view.findViewById(R.id.mapsButton);
         googleMapsButton.setOnClickListener(this);
+        yelpButton = view.findViewById(R.id.yelpButton);
+        yelpButton.setOnClickListener(this);
         guideListReference = FirebaseDatabase.getInstance().getReference().child("Locations").child(locationID).child("Guides");
         usersReference = FirebaseDatabase.getInstance().getReference().child("users");
         guideList = (RecyclerView) view.findViewById(R.id.guide_list);
@@ -281,6 +286,9 @@ public class Location extends Fragment implements View.OnClickListener{
     public void onClick(View v){
         if (v == googleMapsButton){
             mListener.changeFragment(new GoogleMaps().newInstance(latitude, longitude));
+        } else if (v == yelpButton){
+            Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(business.getUrl()));
+            startActivity(i);
         }
     }
 

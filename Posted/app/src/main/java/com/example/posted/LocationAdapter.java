@@ -42,7 +42,7 @@ public class LocationAdapter extends RecyclerView.Adapter<LocationAdapter.ViewHo
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mContentView.setText(mValues.get(position).getLocationName());
-        holder.mRating.setNumStars((int) mValues.get(position).getRating());
+        holder.mRating.setRating(mValues.get(position).getRating());
         Picasso.get().load(mValues.get(position).getLocationPhoto()).into(holder.mImageView);
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override

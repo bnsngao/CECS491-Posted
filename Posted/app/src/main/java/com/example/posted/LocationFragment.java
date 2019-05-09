@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 import com.example.posted.dummy.DummyContent;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -72,6 +73,8 @@ public class LocationFragment extends Fragment {
     private int mColumnCount = 1;
     private OnListFragmentInteractionListener mListener;
     public static final List<LocationItem> LOCATION_ITEMS = new ArrayList<LocationItem>();
+    private FirebaseUser user;
+    private String uid;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -106,6 +109,14 @@ public class LocationFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_location_list, container, false);
+        // Get user information (display display_name, email, and profile pic) from Firebase
+        firebaseAuth = FirebaseAuth.getInstance();
+        mDatabase = FirebaseDatabase.getInstance().getReference();
+        if(firebaseAuth.getCurrentUser() != null){
+            user = firebaseAuth.getCurrentUser();
+            uid = user.getUid();
+        }
+        
         // Set the adapter
         mAdapter = new LocationAdapter(LOCATION_ITEMS, mListener);
         if (view instanceof RecyclerView) {
@@ -131,11 +142,10 @@ public class LocationFragment extends Fragment {
                     ArrayList<Business> businesses = searchResponse.getBusinesses();
 
                     for(Business business : businesses){
-                        String businessId = business.getId();
-                        System.out.println(businessId);
+                        final String businessId = business.getId();
 
                         // Business name
-                        String businessName = business.getName();
+                        final String businessName = business.getName();
 
                         // Business photo
                         String imageUrl = business.getImageUrl();
@@ -143,11 +153,26 @@ public class LocationFragment extends Fragment {
                         // Rating
                         float rating = (float) business.getRating();
                         LocationItem l = new LocationItem(imageUrl,businessName,businessId,rating);
+
+
+                        DatabaseReference ref = mDatabase.child("Locations");
+                        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.exists()){
+                                    if(!dataSnapshot.hasChild(businessId)){
+                                        mDatabase.child("Locations").child(businessId).child("business_name").setValue(businessName);
+                                    }
+                                }
+                            }
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                            }
+                        });
+
                         LOCATION_ITEMS.add(l);
                         mAdapter.notifyDataSetChanged();
-
                     }
-
                 }
                 @Override
                 public void onFailure(Call<SearchResponse> call, Throwable t) {
@@ -180,13 +205,12 @@ public class LocationFragment extends Fragment {
                 }
             }
 
-            System.out.println(categories);
             // general params
             params.put("categories", categories);
             params.put("location", "Long Beach");
+            params.put("limit", "50");
 
             Call<SearchResponse> call = yelpFusionApi.getBusinessSearch(params);
-
             call.enqueue(callback);
 
         }
