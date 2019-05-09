@@ -235,6 +235,8 @@ public class Location extends Fragment implements View.OnClickListener{
                     s.setVisibility(View.VISIBLE);
                     View dividerView = (View) view.findViewById(R.id.guideDivider);
                     dividerView.setVisibility(View.VISIBLE);
+                    RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.guide_list);
+                    recyclerView.setVisibility(View.VISIBLE);
 
                 }
                 @Override
