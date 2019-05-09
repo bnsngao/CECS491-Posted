@@ -148,7 +148,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
-        android:visibility="gone"
+        android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@id/mapsButton" />
 
     <Switch
@@ -164,8 +164,10 @@
         android:id="@+id/guide_list"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/guideDivider" />
+        android:visibility="invisible"
+        android:scrollbars="vertical"
+        app:layout_constraintTop_toBottomOf="@id/guideDivider"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ProgressBar
         android:id="@+id/progressLocationPage"
