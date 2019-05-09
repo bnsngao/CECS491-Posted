@@ -26,6 +26,9 @@
                 android:textAppearance="?attr/textAppearanceListItem" />
             <RatingBar
                 android:id="@+id/guideRatingBar"
+                style="@style/RatingBar"
+                android:theme="@style/RatingBar"
+                android:layout_margin="@dimen/text_margin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:isIndicator="true"/>
