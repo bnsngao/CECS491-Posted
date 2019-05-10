@@ -96,8 +96,7 @@ public class MainMenu extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         // Initialize the main main container with the home fragment
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.main_container, new Home()).commit();
+        changeFragment(new Home());
     }
 
     @Override
@@ -290,6 +289,7 @@ public class MainMenu extends AppCompatActivity
         if (requestCode == PICK_IMAGE && resultCode == Activity.RESULT_OK) {
             if (data == null) {
                 //Display an error
+                System.out.println("Error");
                 return;
             }
             try {
@@ -307,6 +307,7 @@ public class MainMenu extends AppCompatActivity
                         storageRef.child("profileImages/" + user.getUid()).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                             @Override
                             public void onSuccess(Uri uri) {
+                                System.out.println("Error");
                                 mDatabase.child("users").child(uid).child("profile_photo").setValue(uri.toString());
                                 Picasso.get().load(uri).into(profilePicture);
 
@@ -315,6 +316,7 @@ public class MainMenu extends AppCompatActivity
                                                     @Override
                                                     public void onFailure(@NonNull Exception exception) {
 //                                profile_photo = Uri.parse("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
+                                                        System.out.println("Error Fail");
                                                     }
                                                 }
                         );
