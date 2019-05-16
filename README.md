@@ -10,7 +10,7 @@ Alternatively, open the project in Android Studio and connect your Android devic
 
 ## Usage
 
-Refer to the User Guide in the Documentation folder
+Refer to the User Guide in the Design Documents folder
 
 ## Authors
 
